@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.DruglistMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Druglist">
+    <result column="drugListId" jdbcType="VARCHAR" property="drugListId" />
+    <result column="drugId" jdbcType="VARCHAR" property="drugId" />
+    <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="drugDosage" jdbcType="INTEGER" property="drugDosage" />
+    <result column="drugPrice" jdbcType="DOUBLE" property="drugPrice" />
+    <result column="drugListDate" jdbcType="TIMESTAMP" property="drugListDate" />
+  </resultMap>
+  <resultMap id="queryResultMap" type="com.mrms.recoversystem.model.Druglist">
+    <result column="drugListId" jdbcType="VARCHAR" property="drugListId" />
+    <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="drugDosage" jdbcType="INTEGER" property="drugDosage" />
+    <result column="drugPrice" jdbcType="DOUBLE" property="drugPrice" />
+    <result column="drugListDate" jdbcType="TIMESTAMP" property="drugListDate" />
+    <association property="drug" javaType="com.mrms.recoversystem.model.Drug" column="drugId">
+      <result column="drugId" jdbcType="VARCHAR" property="drugId" />
+      <result column="drugName" jdbcType="VARCHAR" property="drugName" />
+      <result column="drugProperties" jdbcType="VARCHAR" property="drugProperties" />
+      <result column="function" jdbcType="VARCHAR" property="function" />
+      <result column="dosage" jdbcType="VARCHAR" property="dosage" />
+      <result column="attention" jdbcType="VARCHAR" property="attention" />
+      <result column="specifications" jdbcType="VARCHAR" property="specifications" />
+      <result column="manufactureDate" jdbcType="DATE" property="manufactureDate" />
+      <result column="effectiveDate" jdbcType="DATE" property="effectiveDate" />
+      <result column="adress" jdbcType="VARCHAR" property="adress" />
+      <result column="stock" jdbcType="INTEGER" property="stock" />
+      <result column="unitPrice" jdbcType="DOUBLE" property="unitPrice" />
+    </association>
+  </resultMap>
+
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Druglist">
+    insert into druglist
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="drugListId != null">
+        drugListId,
+      </if>
+        <if test="drugId != null">
+            drugId,
+        </if>
+      <if test="diagnosisId != null">
+        diagnosisId,
+      </if>
+      <if test="drugDosage != null">
+        drugDosage,
+      </if>
+      <if test="drugListDate != null">
+        drugListDate,
+      </if>
+      <if test="drugPrice != null">
+        drugPrice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="drugListId != null">
+        #{drugListId,jdbcType=VARCHAR},
+      </if>
+        <if test="drugId != null">
+         #{drugId,jdbcType=VARCHAR},
+        </if>
+      <if test="diagnosisId != null">
+        #{diagnosisId,jdbcType=VARCHAR},
+      </if>
+      <if test="drugDosage != null">
+        #{drugDosage,jdbcType=INTEGER},
+      </if>
+      <if test="drugListDate != null">
+        #{drugListDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="drugPrice != null">
+        #{drugPrice,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="searchSingleDruglist" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from druglist
+    where druglistId = #{druglistId};
+  </select>
+
+ <select id="search" parameterType="java.lang.String"  resultMap="queryResultMap">
+  select dl.*,d.*
+  from  druglist dl join drug d on dl.drugId = d.drugId
+  where diagnosisId=#{diagnosisId};
+</select>
+  <update id="update" parameterType="com.mrms.recoversystem.model.Druglist">
+    update druglist
+    <set>
+      <if test="drugId != null">
+        drugId=#{drugId},
+      </if>
+      <if test="diagnosisId != null">
+        diagnosisId=#{diagnosisId},
+      </if>
+      <if test="drugDosage != null">
+        drugDosage=#{drugDosage},
+      </if>
+      <if test="drugListDate != null">
+          drugListDate=#{drugListDate},
+      </if>
+      <if test="drugPrice != null">
+        drugPrice=#{drugPrice}
+      </if>
+    </set>
+    where drugListId=#{drugListId}
+  </update>
+  <delete id="delete" parameterType="com.mrms.recoversystem.model.Druglist">
+    delete *
+    from druglist
+    <where>
+      <if test="drugListId != null">
+        drugListId=#{usgDrugCount}
+      </if>
+      <if test="diagnosisId != null">
+        and diagnosisId=#{usgDrugCount}
+      </if>
+      <if test="drugDosage != null">
+        and drugDosage=#{usgDrugCount}
+      </if>
+      <if test="usgDrugCount != null">
+        and usgDrugCount=#{usgDrugCount}
+      </if>
+      <if test="drugPrice != null">
+        and drugPrice=#{drugPrice}
+      </if>
+    </where>
+  </delete>
+
+  <select id="getMaxdrugListId" resultType="java.lang.String">
+    select max(drugListId)
+    from druglist
+    order by druglistId;
+  </select>
+</mapper>

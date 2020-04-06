@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.MedicalpersonalMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Medicalpersonal">
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="officeId" jdbcType="VARCHAR" property="officeId" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="passWord" jdbcType="VARCHAR" property="passWord" />
+    <result column="jobPosition" jdbcType="VARCHAR" property="jobPosition" />
+    <result column="power" jdbcType="INTEGER" property="power" />
+    <result column="sex" jdbcType="BIT" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="mpBirthday" jdbcType="DATE" property="mpBirthday" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="doctorIntroduction" jdbcType="VARCHAR" property="doctorIntroduction" />
+    <result column="registerSum" jdbcType="INTEGER" property="registerSum" />
+  </resultMap>
+  <resultMap id="queryResultMap" type="com.mrms.recoversystem.model.Medicalpersonal" >
+    <id column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="passWord" jdbcType="VARCHAR" property="passWord" />
+    <result column="officeId" jdbcType="VARCHAR" property="officeId" />
+    <result column="jobPosition" jdbcType="VARCHAR" property="jobPosition" />
+    <result column="power" jdbcType="INTEGER" property="power" />
+    <result column="sex" jdbcType="BIT" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="mpBirthday" jdbcType="DATE" property="mpBirthday" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="doctorIntroduction" jdbcType="VARCHAR" property="doctorIntroduction" />
+    <result column="registerSum" jdbcType="INTEGER" property="registerSum" />
+    <association property="office" column="officeId" javaType="com.mrms.recoversystem.model.Office">
+      <id column="officeId" jdbcType="VARCHAR" property="officeId" />
+      <result column="officeCategory" jdbcType="INTEGER" property="officeCategory" />
+      <result column="officeName" jdbcType="VARCHAR" property="officeName" />
+      <result column="srPosition" jdbcType="VARCHAR" property="srPosition" />
+      <result column="higherOffice" jdbcType="VARCHAR" property="higherOffice" />
+    </association>
+  </resultMap>
+
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Medicalpersonal">
+    insert into medicalpersonal
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="officeId != null">
+        officeId,
+      </if>
+      <if test="userName != null">
+        userName,
+      </if>
+      <if test="passWord != null">
+        passWord,
+      </if>
+      <if test="jobPosition != null">
+        jobPosition,
+      </if>
+      <if test="power != null">
+        power,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="mpBirthday != null">
+        mpBirthday,
+      </if>
+      <if test="subject != null">
+        subject,
+      </if>
+      <if test="doctorIntroduction != null">
+        doctorIntroduction,
+      </if>
+      <if test="registerSum != null">
+        registerSum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="officeId != null">
+        #{officeId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="passWord != null">
+        #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="jobPosition != null">
+        #{jobPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="power != null">
+        #{power,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=BIT},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="mpBirthday != null">
+        #{mpBirthday,jdbcType=DATE},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorIntroduction != null">
+        #{doctorIntroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="registerSum != null">
+       #{registerSum},
+      </if>
+    </trim>
+  </insert>
+  <select id="findUserById" parameterType="java.lang.Integer" resultMap="queryResultMap">
+    select m.*,o.*
+    from medicalpersonal m,office o
+    where userId=#{userId} and m.officeId = o.officeId
+
+
+  </select>
+
+  <select id="searchAllUsers" resultMap="queryResultMap">
+    select mp.*,o.*
+    from medicalpersonal mp join office o on mp.officeId = o.officeId
+    order by userId
+  </select>
+
+  <select id="search" parameterType="com.mrms.recoversystem.model.Medicalpersonal" resultMap="queryResultMap">
+    select mp.*,o.*
+    from medicalpersonal mp join office o on mp.officeId = o.officeId
+    <where>
+      <if test="userId != null">
+       userId=#{userId}
+      </if>
+      <if test="officeId != null">
+       and o.officeId like #{officeId}
+      </if>
+      <if test="userName != null">
+       and userName=#{userName}
+      </if>
+      <if test="passWord != null">
+       and passWord=#{passWord}
+      </if>
+      <if test="jobPosition != null">
+       and jobPosition like #{jobPosition}
+      </if>
+      <if test="power != null">
+       and power=#{power}
+      </if>
+      <if test="sex != null">
+       and sex=#{sex}
+      </if>
+      <if test="subject != null">
+       and subject=#{subject}
+      </if>
+    </where>
+  </select>
+
+  <update id="update" parameterType="com.mrms.recoversystem.model.Medicalpersonal">
+    update medicalpersonal
+    <set>
+      <if test="officeId != null">
+        officeId=#{officeId},
+      </if>
+      <if test="userName != null">
+        userName=#{userName},
+      </if>
+      <if test="passWord != null">
+        passWord=#{passWord},
+      </if>
+      <if test="jobPosition != null">
+        jobPosition=#{jobPosition},
+      </if>
+      <if test="power != null">
+        power=#{power},
+      </if>
+      <if test="sex != null">
+        sex=#{sex},
+      </if>
+      <if test="age != null">
+        age=#{age},
+      </if>
+      <if test="mpBirthday != null">
+        mpBirthday=#{mpBirthday},
+      </if>
+      <if test="subject != null">
+        subject=#{subject},
+      </if>
+      <if test="doctorIntroduction != null">
+        doctorIntroduction=#{doctorIntroduction},
+      </if>
+      <if test="registerSum != null">
+        registerSum=#{registerSum}
+      </if>
+    </set>
+    where userId=#{userId}
+  </update>
+
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete *
+    from medicalpersonal
+    where userId = #{userId}
+  </delete>
+</mapper>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>医疗康复管理系统-登录模块</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/base-method.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+
+            <div class="row-fluid">
+                <div class="span3">
+                </div>
+                <div class="span3">
+                    <h3 id="biaoti" class="text-center">MRMS</h3>
+                    <br>
+                    <form id="login" class="form-horizontal" >
+
+                        <div class="control-group ">
+
+                            <label class="control-label" >账号</label>
+                            <div class="controls">
+                                <input id="userId" type="text" name="userId" required="required"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" >密码</label>
+                            <div class="controls">
+                                <input id="password" type="password" name="passWord" required="required"/>
+                                <br>
+                                <br>
+                                <br>
+                                <p id="msg" style="color: red;"  ></p>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <input class="btn btn-primary" type="button" value="登录" onclick="loginValidate($('#userId').val(),$('#password').val())">
+                                <input class="btn " type="reset" value="重置">
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="span6">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    function loginValidate(userId, passWord){
+        $.ajax({
+            url: "/loginVerification",
+            type: "get",
+            data: {
+                userId: userId,
+                passWord: passWord
+            },
+            success: function (result) {
+                if(result.url !== null){
+                    setCookie("userName", result.userName);
+                    $(location).attr("href", result.url);
+                    return;
+                }
+                $("#msg").text("请验证账号密码是否正确");
+            },
+            error: function () {
+                $("#msg").text("error");
+            }
+        });
+    }
+</script>
+</html>

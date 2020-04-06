@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>挂号模块</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+</head>
+<body style="margin:0;">
+<div class="navbar navbar-inverse"  >
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar">
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </a> <a id="home_page" href="../html/MRMS_Doctor.html" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">挂号管理<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="../html/MRMS_Collector_Register.html" >挂号</a></li>
+                            <li> <a href="../html/MRMS_Collector_Register_List.html" >挂号列表</a></li>
+                        </ul>
+                    </li>
+
+                    <li> <a href="../html/MRMS_Collector_Payment.html">医疗缴费</a></li>
+
+                    <li>
+                        <a href="../html/MRMS_Collector_AddPatient.html">添加患者信息</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <div class="btn-group">
+                        <button id="user-name" class="btn" ></button>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu" >
+                            <li>
+                                <a href="../html/MRMS_Personal_Center.html" onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                            </li>
+                            <li>
+                                <a href="/signOut">退出</a>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <!-- 引入导航栏 -->
+
+            <div class="span12">
+                <div class="row-fluid">
+
+                    <div class="span7">
+                        <div id="register_model">
+                            <h3 contenteditable="true" class="text-center">挂号单</h3>
+                            <div class="row-fluid">
+                                <div class="span5">
+                                    <div id="search_patient_info">
+
+                                        <label>搜索患者：</label>
+
+                                        <label>
+                                            <input type="radio" name="id" value="1" checked="checked">患者ID
+                                            <input type="radio" name="id" value="2">身份证号码
+                                        </label>
+                                        <label for="info">
+                                            <input id="info" class="input-medium search-query" type="text" name="info"
+                                                   required="required">
+                                            <button type="button" class="btn" contenteditable="true"
+                                                    onclick='findPatient($("input:radio[name=id]:checked").val(),$("#info").val())'>
+                                                查找
+                                            </button>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="span5">
+                                    <label>搜索医生：</label><br>
+                                    <label for="doctorInfo">医生姓名：
+                                        <input id="doctorInfo" class="input-medium search-query" type="text"/>
+                                        <button onclick="findDoctor($('#doctorInfo').val())" type="button" class="btn">
+                                            查找
+                                        </button>
+                                    </label>
+                                </div>
+                                <div class="span2">
+                                </div>
+                                <br>
+                                <br>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span5">
+                    </div>
+                </div>
+            </div>
+            <div class="span12">
+                <div class="row-fluid">
+                    <br>
+                    <div class="span7">
+                        <div id="register_info">
+
+                            <form id="add_register" class="table-responsive">
+                                <table cellspacing="10" style="width: 800px;height: 200px;">
+                                    <tr>
+                                        <td>患者ID</td>
+                                        <td><label id="lable_patient_id"></label></td>
+                                        <td>患者姓名</td>
+                                        <td><a id="href_patient_name" style="width: 70px;height: 20px;"
+                                               href="#patient_info" role="button" class="btn"
+                                               data-toggle="modal" onclick="setPatientInfo($('#patientId').val())"></a>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td>科室</td>
+                                        <td><select id="category" style="width:150px;" name="category"
+                                                    onchange="resetRegistrationCategory()">
+                                            <option value="CJ">残疾病科</option>
+                                            <option value="JS">精神病科</option>
+                                        </select></td>
+                                        <td>挂号类别</td>
+                                        <td><select id="registrationCategory" style="width:150px;"
+                                                    name="registrationCategory"
+                                                    onchange="transformRegistrationCategory($('#category').val(),this.value,'userId')">
+                                            <option value="null">请选择</option>
+                                            <option value="3">普通门诊</option>
+                                            <option value="2">专业门诊</option>
+                                            <option value="1">专家门诊</option>
+                                        </select></td>
+                                        <td>医生</td>
+                                        <td><select id="userId" style="width:150px" name="userId">
+
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>挂号费</td>
+                                        <td><input style="width:50px" id="diagnosisPrice" type="number"
+                                                   name="diagnosisPrice" readonly="readonly" value="">元&nbsp;&nbsp;
+                                        </td>
+                                        <td>就诊状态</td>
+                                        <td><select style="width:100px" name="visStatus">
+                                            <option value="1">待诊</option>
+                                            <option value="2">过号</option>
+                                            <option value="3">已就诊</option>
+                                            <option value="4">退号</option>
+                                        </select></td>
+                                        <!--
+                                        <td>就诊序号</td><td><input type="number" id="diagnosisNo" name="diagnosisNo" readonly="readonly"></td>
+                                          -->
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" id="registerId" name="registerId">
+                                            <input id="patientName" type="hidden" name="patientName"><!-- 患者姓名 -->
+                                            <input id="patientId" type="hidden" name="patientId"> <!-- 患者编号 -->
+                                            <input id="tollCollector" type="hidden" name="tollCollector"> <!-- 患者编号 -->
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </form>
+                            <div class="control-group ">
+                                <br> <br> <br>
+                                <button class="btn btn-primary" contenteditable="true" type="button"
+                                        onclick="setRegister()">挂号
+                                </button>
+                                <input id="reset_register_form" class="btn btn-warning" value="重置" type="reset"
+                                       name="重置">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span5">
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 显示搜索到的医生信息 -->
+            <div id="show_doctor_result" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">
+                        医生信息
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <table border="1">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>姓名</th>
+                            <th>科室分类</th>
+                            <th>科室编号</th>
+                            <th>职位</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="show_doctor_info">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
+            <!-- 找不到患者信息，提示是否跳转到患者添加页面 -->
+            <div id="not_find_patient_result" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <label>error</label>
+                </div>
+                <div class="modal-body">
+                    <h3>
+                        找不到该患者信息，是否添加该患者信息?
+                    </h3>
+                </div>
+                <div class="modal-footer">
+                    <a href="/enterAddPatient" class="btn btn-primary">是</a>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">否</button>
+                </div>
+            </div>
+
+            <!-- 患者信息列表 -->
+            <div id="patient_info" style="width: 700px;" class="modal hide fade" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3>
+                        患者治疗信息
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>患者编号</td>
+                            <td><label id="patient_id"></label></td>
+
+                        </tr>
+                        <tr>
+                            <td>姓名</td>
+                            <td><label id="patient_name"></label></td>
+                        </tr>
+                        <tr>
+                            <td>性别</td>
+                            <td><label id="patient_sex"></label></td>
+
+                        </tr>
+                        <tr>
+                            <td>年龄</td>
+                            <td>
+                                <lable id="age"></lable>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>民族</label></td>
+                            <td><label id="nation"></label></td>
+
+                        </tr>
+                        <tr>
+                            <td>籍贯</td>
+                            <td>
+                                <lable id="nativePlace"></lable>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><label>家庭地址</label></td>
+                            <td><label id="homeAdress"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>身份证号码</label></td>
+                            <td><label id="carId"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>联系方式</label></td>
+                            <td><label id="phoneNumber"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>出生日期</label></td>
+                            <td>
+                                <lable id="mpBirthday"></lable>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>职业</label></td>
+                            <td><label id="occupation"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>单位</label></td>
+                            <td><label id="workPlace"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>身高</label></td>
+                            <td><label id="height"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>体重</label></td>
+                            <td><label id="weight"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>血型</label></td>
+                            <td><label id="bloodType"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>是否存在家族病史</label></td>
+                            <td><label id="famSickHistroy"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>家族病史说明</label></td>
+                            <td>
+                                <lable id="sickHistrionicInstruction"></lable>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>是否药物过敏</label></td>
+                            <td>
+                                <lable id="drugAllergy"></lable>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>药物过敏说明</label></td>
+                            <td>
+                                <lable id="drugAllergyIntroduction"></lable>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    window.onload = function () {
+        console.log(document.cookie);
+
+        var userId = getCookie('userId');
+        var userName = getCookie('userName');
+        console.log(userId + " " + userName);
+        //alert(userName);
+        $("#tollCollector").val(userId);
+        $("#user-name").text(userName);
+    };
+
+
+    //设置病人信息
+    function setPatientInfo(patientId) {
+        if (patientId == null)
+            return;
+        $.ajax({
+            type: "get",
+            url: "/searchAppointedPatient",
+            data: {patientId: patientId},
+            dataType: "json",
+            success: function (patient) {
+                $("#patient_id").text(patient.patientId);
+                $("#patient_name").text(patient.patientName);
+                $("#age").text(patient.age + "岁");
+                $("#patient_sex").text(patient.sex == true ? "男" : "女");
+                $("#nation").text(patient.nation);
+                $("#nativePlace").text(patient.nativePlace);
+                $("#carId").text(patient.carId);
+                $("#homeAdress").text(patient.homeAdress);
+                $("#phoneNumber").text(patient.phoneNumber);
+                var birthday = timestampToDate(patient.mpBirthday);//生日需要转换
+                $("#mpBirthday").text(birthday);
+                $("#occupation").text(patient.occupation);
+                $("#workPlace").text(patient.workPlace);
+                $("#height").text(patient.height + " cm");
+                $("#weight").text(patient.weight + " kg");
+                $("#bloodType").text(patient.bloodType + " 型");
+                $("#famSickHistroy").text(patient.famSickHistroy == true ? "是" : "否");
+                $("#sickHistrionicInstruction").text(patient.famSickHistroy == true ? patient.sickHistrionicInstruction : "");
+                $("#drugAllergy").text(patient.drugAllergy == true ? "是" : "否");
+                $("#drugAllergyIntroduction").text(patient.drugAllergy == true ? patient.drugAllergyIntroduction : "");
+            }
+        })
+    }
+
+    function resetRegistrationCategory() {
+        var select = document.getElementById("registrationCategory");
+        select.options[0].selected = true;
+    }
+
+    //寻找病人
+    function findPatient(radioValue, info) {
+        console.log(radioValue + " " + info);
+        var key = radioValue;  //$('input:radio[name="id"]:checked').val()
+        var value = info;
+        $.ajax({
+            type: "get",
+            url: "/searchPatient",
+            data: {
+                "key": key,
+                "value": value
+            },
+            dataType: "json",
+            success: function (patient) {
+                console.log(patient);
+                if (patient != null) {
+                    $("#patientId").val(patient.patientId);
+                    $("#lable_patient_id").text(patient.patientId);
+                    $("#patientName").val(patient.patientName);
+                    $("#href_patient_name").text(patient.patientName);
+                    if (patient.sex == false)
+                        $("#sex").val("女");
+                    else
+                        $("#sex").val("男");
+                    setPatientInfo(patient.patientId);
+                }
+            },
+            error: function () {
+                //alert("该病人还没登记！");
+                $("#not_find_patient_result").modal();
+            }
+        })
+
+    }
+
+    //根据挂号类别修改价钱
+    function changediagnosisPrice(registrationCategory) {
+        var change = registrationCategory;
+        //alert(category+" "+change)
+        if (change == "0") {
+            $("#diagnosisPrice").val("");
+        }
+        else {
+
+            if (change == "1") {
+                $("#diagnosisPrice").val(10);
+            }
+            else if (change == "2") {
+                $("#diagnosisPrice").val(7);
+            }
+            else if (change == "3") {
+                $("#diagnosisPrice").val(2);
+            }
+        }
+
+
+    }
+
+    //根据科室和挂号类别来查找医生
+    function transformRegistrationCategory(office, registrationCategory, id) {
+        console.log(office + " " + registrationCategory + " " + id);
+        $("#" + id).empty();
+        var change = registrationCategory;
+        var category = office;
+        changediagnosisPrice(registrationCategory);
+        $.ajax({
+            type: "get",
+            url: "/findDoctor",
+            data: {
+                "officeCategory": category,
+                "jobPosition": change
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data != null) {
+                    var option = '<option value="">请选择</option>';
+                    $.each(data.list, function (i, mdeicalpersonal) {
+                        option += '<option value="' + mdeicalpersonal.userId + '">' + mdeicalpersonal.userName + '</option>';
+                    });
+                    $("#" + id).append(option);
+                }
+            },
+            error: function () {
+                return;
+            }
+
+        })
+    }
+
+    //根据医生名字来寻找医生
+    function findDoctor(doctorName) {
+        var userName = doctorName;
+        if (userName == null)
+            return;
+        else {
+            $.ajax({
+                type: "get",
+                url: "/findDoctor",
+                data: {"doctorName": userName},
+                dataType: "json",
+                success: function (data) {
+                    console.log(data.list);
+                    if (data != null) {
+                        var tbody = "";
+
+                        $.each(data.list, function (i, doctor) {
+                            var offCategory;
+                            var category = doctor.office.officeCategory;
+                            var doctorName = doctor.userName;
+                            if (category == 0)
+                                offCategory = "精神科";
+                            else if (category == 1)
+                                offCategory = "残疾科";
+
+                            tbody += '<tr><td>' + doctor.userId + '</td><td>' + doctor.userName + '</td><td>' + offCategory + '</td><td>' + doctor.office.officeId
+                                + '</td><td>' + doctor.jobPosition + '</td><td><button type="button" class="close btn btn-primary" ' +
+                                'data-dismiss="modal"  ' +
+                                'onclick="addDoctor(' + doctor.userId + ',' + "'" + doctor.userName + "'" + ',' + category + ',' + doctor.power + ')">确定</button></td></tr>';
+                        });
+                        $("#show_doctor_info").append(tbody);
+                        $("#show_doctor_result").modal();
+                    }
+                },
+                error: function () {
+                    alert("找不到该医生");
+                }
+            })
+        }
+
+    }
+
+    $("#show_doctor_result").on("hide.bs.modal", function () {
+        $("#show_doctor_info").html("");
+    });
+
+    //挂号
+    function setRegister() {
+        var patientId = $("#patientId").val();
+        if (patientId == null || patientId == "") {
+            alert("请先选择患者");
+            return;
+        }
+        $.ajax({
+            type: "post",
+            url: "/addRegister",
+            dataType: "json",
+            data: $("#add_register").serialize(),
+            success: function (data) {
+                if (data == true) {
+                    alert("挂号成功");
+                    window.location.reload();
+                }
+
+
+            },
+            error: function () {
+                alert("挂号失败");
+            }
+        })
+    }
+
+    //找到医生后将其信息显示在挂号清单上
+    function addDoctor(doctorId, doctorName, office, jobPosition) {
+        console.log(doctorId + " " + doctorName + " " + office + " " + jobPosition);
+        /*
+        * doctorId :医生编号
+        * doctorName：医生姓名
+        * office:科室分类
+        * jobPosition：职位
+        * */
+        if (doctorId == null || doctorName == null || office == null || jobPosition == null)
+            return;
+
+        var category = "";
+        if (office == 0)
+            category = "JS";
+        if (office == 1)
+            category = "CJ";
+        $("#userId").append('<option value="' + doctorId + '" selected="selected">' + doctorName + '</option>');
+        var select1 = document.getElementById("registrationCategory");
+        var select2 = document.getElementById("category");
+        for (var i = 0; i < select1.options.length; i++) {
+            if (select1.options[i].value == jobPosition)
+                select1.options[i].selected = true;
+        }
+        for (var i = 0; i < select2.options.length; i++) {
+            if (select2.options[i].value == category)
+                select2.options[i].selected = true;
+        }
+        changediagnosisPrice(jobPosition);
+        //$("#registrationCategory").find("option[jobPosition]").attr("selected",true);
+
+    }
+
+    //日期格式化  YY-MM-DD
+    function timestampToDate(timestamp) {
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = (date.getDate() + 1 < 10 ? '0' + (date.getDate() + 1) : date.getDate() + 1);
+        return Y + M + D;
+    }
+
+    //根据参数返回不同的门诊类型
+    function judgeRegistrationCategory(registrationCategory) {
+        if (registrationCategory == 1)
+            return "专家门诊";
+        else if (registrationCategory == 2)
+            return "专业门诊";
+        else if (registrationCategory == 3)
+            return "普通门诊";
+    }
+
+    //根据参数返回就诊状态
+    function judgeVisStatus(visStatus) {
+        if (visStatus == 1)
+            return "待诊";
+        else if (visStatus == 2)
+            return "过号";
+        else if (visStatus == 3)
+            return "已就诊";
+        else if (visStatus == 4)
+            return "退号";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+</script>
+</body>
+</html>

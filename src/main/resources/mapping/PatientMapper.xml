@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.PatientMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Patient">
+    <result column="patientId" jdbcType="INTEGER" property="patientId" />
+    <result column="patientName" jdbcType="VARCHAR" property="patientName" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="nation" jdbcType="VARCHAR" property="nation" />
+    <result column="nativePlace" jdbcType="VARCHAR" property="nativePlace" />
+    <result column="carId" jdbcType="VARCHAR" property="carId" />
+    <result column="homeAdress" jdbcType="VARCHAR" property="homeAdress" />
+    <result column="phoneNumber" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="mpBirthday" jdbcType="DATE" property="mpBirthday" />
+    <result column="sex" jdbcType="BIT" property="sex" />
+    <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+    <result column="workPlace" jdbcType="VARCHAR" property="workPlace" />
+    <result column="height" jdbcType="DOUBLE" property="height" />
+    <result column="weight" jdbcType="DOUBLE" property="weight" />
+    <result column="bloodType" jdbcType="VARCHAR" property="bloodType" />
+    <result column="famSickHistroy" jdbcType="BIT" property="famSickHistroy" />
+    <result column="sickHistrionicInstruction" jdbcType="VARCHAR" property="sickHistrionicInstruction" />
+    <result column="drugAllergy" jdbcType="BIT" property="drugAllergy" />
+    <result column="drugAllergyIntroduction" jdbcType="VARCHAR" property="drugAllergyIntroduction" />
+  </resultMap>
+  <sql id="selectWhere">
+    <where>
+      <if test="patientId != null and patientId!=''">
+        patientId=#{patientId}
+      </if>
+      <if test="patientName != null and patientName !=''">
+        and  patientName=#{patientName}
+      </if>
+      <if test="age != null">
+        and age=#{age}
+      </if>
+      <if test="nation != null and nation != ''">
+        and nation=#{nation}
+      </if>
+      <if test="nativePlace != null and nativePlace != ''">
+        and  nativePlace=#{nativePlace}
+      </if>
+      <if test="carId != null and carId != '' ">
+        and  carId=#{carId}
+      </if>
+      <if test="homeAdress != null and homeAdress != '' ">
+        and  homeAdress=#{homeAdress}
+      </if>
+      <if test="phoneNumber != null and phoneNumber != '' ">
+        and phoneNumber=#{phoneNumber}
+      </if>
+      <if test="mpBirthday != null ">
+        and mpBirthday=#{mpBirthday}
+      </if>
+      <if test="sex != null and sex != '' ">
+        and sex=#{sex}
+      </if>
+      <if test="occupation != null and occupation != '' ">
+        and occupation=#{occupation}
+      </if>
+      <if test="workPlace != null and workPlace != '' ">
+        and workPlace=#{workPlace}
+      </if>
+      <if test="bloodType != null and bloodType != '' ">
+        and bloodType=#{bloodType}
+      </if>
+    </where>
+  </sql>
+  <insert id="insert" parameterType="com.mrms.recoversystem.model.Patient">
+    insert into patient (patientId, patientName, age, 
+      nation, nativePlace, carId, 
+      homeAdress, phoneNumber, mpBirthday, 
+      sex, occupation, workPlace, 
+      height, weight, bloodType, 
+      famSickHistroy, sickHistrionicInstruction, 
+      drugAllergy, drugAllergyIntroduction)
+    values (#{patientId,jdbcType=INTEGER}, #{patientName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
+      #{nation,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, #{carId,jdbcType=INTEGER}, 
+      #{homeAdress,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=INTEGER}, #{mpBirthday,jdbcType=DATE}, 
+      #{sex,jdbcType=BIT}, #{occupation,jdbcType=VARCHAR}, #{workPlace,jdbcType=VARCHAR}, 
+      #{height,jdbcType=DOUBLE}, #{weight,jdbcType=DOUBLE}, #{bloodType,jdbcType=VARCHAR}, 
+      #{famSickHistroy,jdbcType=BIT}, #{sickHistrionicInstruction,jdbcType=VARCHAR}, 
+      #{drugAllergy,jdbcType=BIT}, #{drugAllergyIntroduction,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Patient">
+    insert into patient
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="patientId != null">
+        patientId,
+      </if>
+      <if test="patientName != null">
+        patientName,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="nation != null">
+        nation,
+      </if>
+      <if test="nativePlace != null">
+        nativePlace,
+      </if>
+      <if test="carId != null">
+        carId,
+      </if>
+      <if test="homeAdress != null">
+        homeAdress,
+      </if>
+      <if test="phoneNumber != null">
+        phoneNumber,
+      </if>
+      <if test="mpBirthday != null">
+        mpBirthday,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="occupation != null">
+        occupation,
+      </if>
+      <if test="workPlace != null">
+        workPlace,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="weight != null">
+        weight,
+      </if>
+      <if test="bloodType != null">
+        bloodType,
+      </if>
+      <if test="famSickHistroy != null">
+        famSickHistroy,
+      </if>
+      <if test="sickHistrionicInstruction != null">
+        sickHistrionicInstruction,
+      </if>
+      <if test="drugAllergy != null">
+        drugAllergy,
+      </if>
+      <if test="drugAllergyIntroduction != null">
+        drugAllergyIntroduction,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="patientId != null">
+        #{patientId,jdbcType=INTEGER},
+      </if>
+      <if test="patientName != null">
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="nation != null">
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null">
+        #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="carId != null">
+        #{carId,jdbcType=INTEGER},
+      </if>
+      <if test="homeAdress != null">
+        #{homeAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=INTEGER},
+      </if>
+      <if test="mpBirthday != null">
+        #{mpBirthday,jdbcType=DATE},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=BIT},
+      </if>
+      <if test="occupation != null">
+        #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="workPlace != null">
+        #{workPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=DOUBLE},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=DOUBLE},
+      </if>
+      <if test="bloodType != null">
+        #{bloodType,jdbcType=VARCHAR},
+      </if>
+      <if test="famSickHistroy != null">
+        #{famSickHistroy,jdbcType=BIT},
+      </if>
+      <if test="sickHistrionicInstruction != null">
+        #{sickHistrionicInstruction,jdbcType=VARCHAR},
+      </if>
+      <if test="drugAllergy != null">
+        #{drugAllergy,jdbcType=BIT},
+      </if>
+      <if test="drugAllergyIntroduction != null">
+        #{drugAllergyIntroduction,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectPatient" parameterType="com.mrms.recoversystem.model.Patient" resultType="com.mrms.recoversystem.model.Patient">
+    select * from patient
+    <include refid="selectWhere"/>
+  </select>
+  <update id="update" parameterType="com.mrms.recoversystem.model.Patient">
+  update patient
+  <set>
+    <if test="patientName != null">
+      patientName = #{patientName,jdbcType=VARCHAR},
+    </if>
+    <if test="age != null">
+      age = #{age,jdbcType=INTEGER},
+    </if>
+    <if test="nation != null">
+      nation = #{nation,jdbcType=VARCHAR},
+    </if>
+    <if test="nativePlace != null">
+      nativePlace = #{nativePlace,jdbcType=VARCHAR},
+    </if>
+    <if test="carId != null">
+      carId = #{carId,jdbcType=INTEGER},
+    </if>
+    <if test="homeAdress != null">
+      homeAdress = #{homeAdress,jdbcType=VARCHAR},
+    </if>
+    <if test="phoneNumber != null">
+      phoneNumber = #{phoneNumber,jdbcType=INTEGER},
+    </if>
+    <if test="mpBirthday != null">
+      mpBirthday = #{mpBirthday,jdbcType=DATE},
+    </if>
+    <if test="sex != null">
+      sex = #{sex,jdbcType=BIT},
+    </if>
+    <if test="occupation != null">
+      occupation = #{occupation,jdbcType=VARCHAR},
+    </if>
+    <if test="workPlace != null">
+      workPlace = #{workPlace,jdbcType=VARCHAR},
+    </if>
+    <if test="height != null">
+      {height = #{height,jdbcType=DOUBLE},
+    </if>
+    <if test="weight != null">
+      weight=#{weight,jdbcType=DOUBLE},
+    </if>
+    <if test="bloodType != null">
+      bloodType= #{bloodType,jdbcType=VARCHAR},
+    </if>
+    <if test="famSickHistroy != null">
+      famSickHistroy= #{famSickHistroy,jdbcType=BIT},
+    </if>
+    <if test="sickHistrionicInstruction != null">
+      sickHistrionicInstruction=#{sickHistrionicInstruction,jdbcType=VARCHAR},
+    </if>
+    <if test="drugAllergy != null">
+      drugAllergy=#{drugAllergy,jdbcType=BIT},
+    </if>
+    <if test="drugAllergyIntroduction != null">
+    drugAllergyIntroduction=#{drugAllergyIntroduction,jdbcType=VARCHAR}
+    </if>
+  </set>
+  where patientId=#{patientId,jdbcType=INTEGER}
+</update>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from patient
+    where patientId = #{patientId};
+  </delete>
+
+  <select id="findAllPatient"  resultType="com.mrms.recoversystem.model.Patient">
+    select patientId, patientName, age,
+      nation, nativePlace, carId,
+      homeAdress, phoneNumber, mpBirthday,
+      sex, occupation, workPlace,
+      height, weight, bloodType,
+      famSickHistroy, sickHistrionicInstruction,
+      drugAllergy, drugAllergyIntroduction
+      from patient
+
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultType="com.mrms.recoversystem.model.Patient">
+    select *
+    from patient
+    where patientId = #{patientId};
+  </select>
+  <select id="findAppointedPatient" parameterType="com.mrms.recoversystem.model.Patient" resultType="com.mrms.recoversystem.model.Patient">
+        select patientId, patientName, age,
+      nation, nativePlace, carId,
+      homeAdress, phoneNumber, mpBirthday,
+      sex, occupation, workPlace,
+      height, weight, bloodType,
+      famSickHistroy, sickHistrionicInstruction,
+      drugAllergy, drugAllergyIntroduction
+      from patient
+      <include refid="selectWhere"/>
+    </select>
+</mapper>

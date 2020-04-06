@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>缴费模块</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/patient.js"></script>
+
+</head>
+<body style="margin:0;">
+<!-- 引入导航栏 -->
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar">
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </a><a id="home_page" href="../html/MRMS_Doctor.html" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">挂号管理<strong
+                                class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../html/MRMS_Collector_Register_List.html">挂号</a></li>
+                            <li><a href="../html/MRMS_Collector_Register_List.html">挂号列表</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../html/MRMS_Collector_Payment.html">医疗缴费</a></li>
+
+                    <li class="active">
+                        <a href="../html/MRMS_Collector_AddPatient.html">添加患者信息</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li class="divider-vertical">
+                        <div class="btn-group">
+                            <button id="user-name" class="btn"></button>
+                            <button data-toggle="dropdown" class="btn dropdown-toggle"><span
+                                    class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="../html/MRMS_Personal_Center.html" onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                                </li>
+                                <li>
+                                    <a href="/signOut">退出</a>
+                                </li>
+                                <li class="divider"></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <div  class="span3">
+                </div>
+                <div  class="span6">
+                    <h3 class="text-center">添加患者信息</h3>
+                    <hr>
+                    <div class="tab-content">
+                        <!-- 添加患者信息 -->
+                        <div id="add_patient_info" class="tab-pane active">
+                            <form id="add_patient" >
+                                <table>
+                                    <tr>
+                                        <td>姓名</td><td><input id="patientName" type="text"  name="patientName" required="required"/>*</td>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td>性别</td><td>
+                                        <select id="sex" name="sex" style="width: 50px;">
+                                            <option value="true">男</option>
+                                            <option value="false">女</option>
+                                        </select>*</td>
+                                    </tr>
+                                    <tr><td>
+                                        <label>出生日期</label></td><td><input id="mpBirthday" type="date" name="mpBirthday" value="">
+                                    </td></tr>
+
+                                    <tr>
+                                        <td>年龄</td><td><input id="age" type="number" name="age" max="150" min="0" size="10"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>民族</label></td><td><select id="nation" name="nation" ></select></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>籍贯</td><td><select onchange="chinaChange(this,document.getElementById('city'));" style=" width:120px; height:30px;line-height:30px; ">
+                                        <option value ="null">请选择省份</option>
+                                        <option value ="北京市">
+                                            北京市 </option><option value ="天津市">
+                                        天津市 </option><option value ="上海市">
+                                        上海市 </option><option value ="重庆市">
+                                        重庆市 </option><option value ="河北省">
+                                        河北省 </option><option value ="山西省">
+                                        山西省 </option><option value ="辽宁省">
+                                        辽宁省 </option><option value ="吉林省">
+                                        吉林省 </option><option value ="黑龙江省">
+                                        黑龙江省</option><option value ="江苏省"> 
+                                        江苏省 </option><option value ="浙江省">
+                                        浙江省 </option><option value ="安徽省">
+                                        安徽省 </option><option value ="福建省">
+                                        福建省 </option><option value ="江西省">
+                                        江西省 </option><option value ="山东省">
+                                        山东省 </option><option value ="河南省">
+                                        河南省 </option><option value ="湖北省">
+                                        湖北省 </option><option value ="湖南省">
+                                        湖南省 </option><option value ="广东省">
+                                        广东省 </option><option value ="海南省">
+                                        海南省 </option><option value ="四川省">
+                                        四川省 </option><option value ="贵州省">
+                                        贵州省 </option><option value ="云南省">
+                                        云南省 </option><option value ="陕西省">
+                                        陕西省 </option><option value ="甘肃省">
+                                        甘肃省 </option><option value ="青海省">
+                                        青海省 </option><option value ="台湾省">
+                                        台湾省 </option><option value ="广西壮族自治区">
+                                        广西壮族自治区</option><option value ="内蒙古自治区"> 
+                                        内蒙古自治区</option><option value ="西藏自治区"> 
+                                        西藏自治区</option><option value ="宁夏回族自治区"> 
+                                        宁夏回族自治区 </option><option value ="新疆维吾尔自治区">
+                                        新疆维吾尔自治区</option><option value ="香港特别行政区">
+                                        香港特别行政区</option><option value ="澳门特别行政区">
+                                        澳门特别行政区</option>
+                                    </select>
+                                        <select  name="nativePlace" id="city" style=" width:120px; height:30px;line-height:30px; ">
+                                            <option value ="null">请选择市区</option>
+                                        </select>
+                                    </td>
+                                    </tr>
+                                    <tr><td>
+                                        <label>家庭地址</label></td><td><input id="homeAdress" type="text" name="homeAdress" value="">
+                                    </td></tr>
+                                    <tr><td>
+                                        <label >身份证号码</label></td><td><input id="carId" type="text" name="carId"  required="required" onchange="checkCardId(this.value,'flag')">*<p id="flag" ></p>
+                                    </td></tr>
+                                    <tr><td>
+                                        <label>联系方式</label></td><td><input id="phoneNumber" type="text" name="phoneNumber" value="" onchange="checkphoneNumber(this.value,'phone')"
+                                                                           required="required" ><p id="phone"></p></td></tr>
+                                    <tr><td>
+                                        <label>职业</label></td><td><input id="occupation" type="text" name="occupation" value=""></td></tr>
+                                    <tr><td>
+                                        <label>单位</label></td><td><input id="workPlace" type="text" name="workPlace" value=""></td></tr>
+                                    <tr><td>
+                                        <label>身高</label></td><td><input id="height" type="number" name="height"  style="width:70px" min="0.0" max="300.0"
+                                                                         onblur="if (!/^\d+(\.\d+)?$/.test(this.value)){this.value='';}" step="0.1">cm</td></tr>
+                                    <tr><td>
+                                        <label>体重</label></td><td><input id="weight" type="number" name="weight" style="width:70px" min="0.0" max="1000.0"
+                                                                         onblur="if (!/^\d+(\.\d+)?$/.test(this.value)){this.value='';}" step="0.1">kg</td></tr>
+                                    <tr><td>
+                                        <label>血型</label></td><td> <select id="bloodType" name="bloodType" style="width:60px">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="AB">AB</option>
+                                        <option value="O">O</option>
+                                    </select>型</td></tr>
+                                    <tr><td>
+                                        <label>是否存在家族病史</label></td><td><select id="famSickHistroy" onchange="change(this.value,'sickHistrionicInstruction')"
+                                                                                name="famSickHistroy"  style="width: 50px;">
+                                        <option value="true">是</option>
+                                        <option value="false" >否</option>
+                                    </select></td></tr>
+                                    <tr><td>
+                                        <label>家族病史说明</label></td><td><input  id="sickHistrionicInstruction"
+                                                                              type="text" style="width:300px; height:150px;" name="sickHistrionicInstruction" value=""></td></tr>
+                                    <tr><td>
+                                        <label>是否药物过敏</label></td><td><select id="drugAllergy" onchange="change(this.value,'drugAllergyIntroduction')" name="drugAllergy"  style="width: 50px;">
+                                        <option value="true">是</option>
+                                        <option value="false" >否</option>
+                                    </select></td></tr>
+                                    <tr><td>
+                                        <label>药物过敏说明</label></td><td><input  id="drugAllergyIntroduction"  type="text"
+                                                                              style="width:300px; height:150px;" name="drugAllergyIntroduction" value=""></td></tr>
+                                    <tr><td>
+
+                                    </td></tr>
+                                </table>
+                            </form>
+
+                        </div>
+                        <div>
+                            <label class="checkbox"> <button class="btn btn-primary"  onclick="addPatientInfo()">提交</button>
+                                <button id="reset_patient_form" class="btn" type="reset">重置</button>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div  class="span3">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+window.onload = function () {
+    var userId = getCookie('userId');
+    var userName = getCookie('userName');
+    console.log(userId+" "+userName);
+    document.getElementById("user-name").innerHTML = userName;
+}
+var nations = ["汉族","蒙古族","回族","藏族","维吾尔族","苗族","彝族","壮族","布依族","朝鲜族","满族","侗族","瑶族","白族","土家族",
+    "哈尼族","哈萨克族","傣族","黎族","傈僳族","佤族","畲族","高山族","拉祜族","水族","东乡族","纳西族","景颇族","柯尔克孜族",
+    "土族","达斡尔族","仫佬族","羌族","布朗族","撒拉族","毛南族","仡佬族","锡伯族","阿昌族","普米族","塔吉克族","怒族", "乌孜别克族",
+    "俄罗斯族","鄂温克族","德昂族","保安族","裕固族","京族","塔塔尔族","独龙族","鄂伦春族","赫哲族","门巴族","珞巴族","基诺族"];
+var option = "";
+for(var i = 0; i <
+nations.length; i++) {
+    option += '<option value="' +  nations[i] + '">' + nations[i] + '</option>';
+}
+$(option).appendTo("#nation");
+$(option).appendTo("#nation1");
+$(option).appendTo("#updateNation");
+
+//根据生日设置年龄
+function setAge(birthday) {
+    console.log(birthday);
+    var nowDay = new Date();
+    var oldDay = new Date(birthday);
+    console.log(nowDay);
+    var result = nowDay.getTime()-oldDay.getTime();
+    console.log("差值"+result);
+    var year = 365*24*3600*1000;
+    var age = Math.floor(result/year);
+    console.log(age);
+    $("#age").val(age);
+}
+</script>
+</html>

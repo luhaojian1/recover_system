@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>随访记录</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/custom-doctor-method.js"></script>
+    <script src="../js/base-method.js"></script>
+</head>
+<body style="margin: 0px;">
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+            <a id="home_page" href="../html/MRMS_Doctor.html" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li><a href="../html/MRMS_Manager_Patient_List.html">患者信息管理</a></li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">用户管理<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="../html/MRMS_Manager_AddUser.html">创建新用户</a></li>
+                            <li><a href="../html/MRMS_Manager_UserList.html">用户列表</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">随访管理<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="../html/MRMS_Manager_FollowUpPlan.html">发布随访计划</a></li>
+                            <li><a href="../html/MRMS_Manager_FollowUpPlan_List.html">随访计划列表</a></li>
+                            <li><a href="../html/MRMS_Manager_FollowUpPlan_Record_List.html">随访记录管理</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <ul class="nav pull-right">
+                    <div class="btn-group">
+                        <button id="user-name" class="btn" ></button>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu" >
+                            <li>
+                                <a href="../html/MRMS_Personal_Center.html" onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                            </li>
+                            <li>
+                                <a href="/signOut">退出</a>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid">
+    <div  class="row-fluid">
+
+        <div class="span12">
+            <div class="row-fluid">
+
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="row-fluid">
+                                <div class="span1"></div>
+                                <div class="span9">
+                                    <h3>发布随访计划</h3>
+                                    <div>
+                                        <form id="diagnosis_record">
+                                            <fieldset>
+                                                <table id="fuplan_table"
+                                                       class="table table-condensed ">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>随访时间:</td>
+                                                        <td>
+                                                            <input id="followUpStartTime" name="fuStartTime"
+                                                                   type="date"
+                                                            >-
+                                                            <input id="followUpEndTime" name="fuEndTime"
+                                                                   type="date"
+                                                                   onchange="checkDateTime($('#followUpStartTime').val(),this.value)"
+                                                            ></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>选择治疗时间段内的病人进行随访:</td>
+                                                        <td>
+                                                            <input id="diagnosisStartTime" name="digsStartTime"
+                                                                   type="date"
+                                                                   onchange="checkDateTime(this.value,$('#followUpStartTime').val())"
+                                                            >-
+                                                            <input id="diagnosisEndTime" name="digsEndTime"
+                                                                   type="date"
+                                                                   onchange="checkDateTime($('#diagnosisStartTime').val(),this.value)"
+                                                            >
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>随访计划:</td>
+                                                        <td>
+                                                                 <textarea id="fuPlan" name="fuPlan"
+                                                                           type="textarea"
+                                                                           style="width: 500px;height: 300px;"></textarea>
+
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </fieldset>
+                                        </form>
+                                    </div>
+                                    <button id="success"
+                                            onclick="setFlupplan($('#diagnosis_record'))">确定
+                                    </button>
+                                    <input type="reset" value="重置">
+                                     </div>
+                                <div class="span2">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    <!-- 信息提示框 -->
+    <div id="tip_modal" class="modal hide fade"
+         role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"
+                    aria-hidden="true">×</button>
+            <h3 >
+                MRMS
+            </h3>
+        </div>
+        <div class="modal-body">
+            <p id="tip">
+                显示信息
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" >确定</button>
+        </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        var userName = getCookie('userName');
+        console.log(userName);
+        $("#user-name").html(userName);
+
+    });
+
+    //设置随访计划
+    function setFlupplan(form) {
+        var table = $("#fuplan_table");
+
+        var tip = "";
+        var fuPlan = "";
+        if (checkDateTime($('#followUpStartTime').val(), $('#followUpEndTime').val()) === false)
+            tip += "请选择随访时间!\n";
+        if (checkDateTime($('#diagnosisStartTime').val(), $('#diagnosisEndTime').val()) === false)
+            tip += "请选择诊断时间段！\n";
+        if (checkDateTime($('#diagnosisStartTime').val(), $('#followUpStartTime').val()) === false)
+            tip += "诊断单日期不能大于随访开始时间\n";
+        if ($("#fuPlan").val === "" || $("#fuPlan").val == null)
+            tip += "随访计划不能为空！"
+        if (tip != "") {
+            alert(tip);
+            return false;
+        }
+
+        $.ajax({
+            url: "/setFlupplan",
+            type: "post",
+            data: form.serialize(),
+            success: function (data) {
+                if (data == true)
+                  setTip("发布成功");
+
+                else{
+                    setTip("发布失败");
+                    return false;
+                }
+
+            },
+            error: function () {
+
+            }
+        });
+
+    }
+    //设置提示
+    function setTip(tip) {
+        $("#tip").text(tip);
+        $("#tip_modal").modal();
+    }
+
+    //寻找指定时间内诊断的患者
+    function findDiagnosisByTime(dateStartTime, dateEndTime, pageNum) {
+        var flag = checkDateTime(dateStartTime, dateEndTime);
+        if (flag === false)
+            return;
+        $.ajax({
+            type: "get",
+            url: "/getAppointTimeDiagnosis",
+            data: {
+                startDate: dateStartTime,
+                endDate: dateEndTime,
+                pageNum: pageNum,
+                pageSize: 5
+            },
+            dataType: "json",
+            success: function (map) {
+                console.log(map.diagnosises);
+                $("#diagnosis_list_info").html("");
+                $("#diagnosis_list_pagination").html("");
+                var tbody = "";
+
+                $.each(map.diagnosises.list, function (i, diagnosis) {
+                    var diagnosisDateTime = timestampToTime(diagnosis.diagnosisDate);
+                    tbody += '<tr id=' + '"' + diagnosis.diagnosisId + '"' + '><td>' + diagnosis.diagnosisId + '</td><td>' + diagnosis.patient.patientId
+                        + '</td><td>' + diagnosis.patient.patientName + '</td><td>' + diagnosis.doctor.userId + '</td><td>' + diagnosis.doctor.userName
+                        + '</td><td>' + diagnosis.diagnosisResult + '</td><td>' + diagnosisDateTime
+                        + '</td><td><a href="#diagnosis_info" role="button" class=" btn btn-primary" data-toggle="modal"' +
+                        'onclick="findDiagnosisByDiagnosisId(' + "'" + diagnosis.diagnosisId + "'" + ')">详细信息</a>'
+                        + '<a href="#add_diagnosis_info" role="button" class=" btn btn-warning" data-toggle="modal"' +
+                        'onclick="addFollowUpPatient(' + "'" + diagnosis.diagnosisId + "'" + ')">添加</a></td></tr>';
+                });
+
+                var page = map.diagnosises;
+                var pageBody = pagination(page, "register");
+                $("#diagnosis_list_pagination").append(pageBody);
+                $("#diagnosis_list_info").append(tbody);
+
+            },
+            error: function () {
+                alert("找不到该挂号单");
+                return;
+            }
+        })
+
+    }
+
+    //设置病人信息
+    function setPatientInfo(patientId) {
+        if (patientId == null)
+            return;
+        $.ajax({
+            type: "get",
+            url: "/searchAppointedPatient",
+            data: {patientId: patientId},
+            dataType: "json",
+            success: function (patient) {
+                $("#patient_id").text(patient.patientId);
+                $("#patient_name").text(patient.patientName);
+                $("#patientId").text(patient.patientId);
+                $("#patientName").text(patient.patientName);
+                $("#age").text(patient.age + "岁");
+                $("#sex").text(patient.sex == true ? "男" : "女");
+                $("#nation").text(patient.nation);
+                $("#nativePlace").text(patient.nativePlace);
+                $("#carId").text(patient.carId);
+                $("#homeAdress").text(patient.homeAdress);
+                $("#phoneNumber").text(patient.phoneNumber);
+                var birthday = timestampToDate(patient.mpBirthday);//生日需要转换
+                $("#mpBirthday").text(birthday);
+                $("#occupation").text(patient.occupation);
+                $("#workPlace").text(patient.workPlace);
+                $("#height").text(patient.height + " cm");
+                $("#weight").text(patient.weight + " kg");
+                $("#bloodType").text(patient.bloodType + " 型");
+                $("#famSickHistroy").text(patient.famSickHistroy == true ? "是" : "否");
+                $("#sickHistrionicInstruction").text(patient.famSickHistroy == true ? patient.sickHistrionicInstruction : "");
+                $("#drugAllergy").text(patient.drugAllergy == true ? "是" : "否");
+                $("#drugAllergyIntroduction").text(patient.drugAllergy == true ? patient.drugAllergyIntroduction : "");
+            }
+        })
+    }
+
+    //查找并设置诊断记录信息
+    function findDiagnosisByDiagnosisId(diagnosisId) {
+        console.log(diagnosisId);
+        if (diagnosisId == null || diagnosisId == "")
+            return;
+
+        $.ajax({
+            type: "get",
+            url: "/findDiagnosisById",
+            dataType: "json",
+            data: {"diagnosisId": diagnosisId},
+            success: function (map) {
+
+                console.log(map.diagnosis);
+                var diagnosis = map.diagnosis;
+                //设置表单信息
+                $("#doctor_id").text(diagnosis.doctor.userId);
+                $("#doctorName").text(diagnosis.doctor.userName);
+                $("#patient_name").text(diagnosis.patient.patientName);
+                $("#patient_id").text(diagnosis.patient.patientId);
+                $("#sick_classification").text(diagnosis.sickClassification);
+                $("#sick_level").text(diagnosis.sickLevel);
+                $("#chiefComplain").text(diagnosis.chiefComplaint);    //病因
+                $("#diagnosisResult").text(diagnosis.diagnosisResult); //诊断结果
+                $("#recoverPlan").text(diagnosis.recoverPlan);             //康复计划
+
+            },
+            error: function () {
+                alert("找不到该诊断信息表，请检查输入是否正确");
+
+            }
+        })
+
+    }
+
+    //自定义分页插件
+    function pagination(page, name, startDate, endDate) {
+        var pageBody = "";
+        pageBody += '<li><a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',1,' + startDate + ',' + "'" + endDate + "'" + ')" >首页</a></li>';
+        if (page.pageNum != 1)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pageNum - 1) + ',' + startDate + ',' + "'" + endDate + "'" + ')">上一页</a></li>';
+        //假如总页数只有1页时，不设置分页
+        //当总页数少于7时，显示所有的页数，否则动态变换
+        var al = '';
+        if (page.pages < 7) {
+            for (var i = 1; i <= page.pages; i++) {
+                if (i == page.pageNum)
+                    pageBody += '<li class="active"><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ',' + startDate + ',' + "'" + endDate + "'" + ')">' + i + '</a></li>';
+                else
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ',' + startDate + ',' + "'" + endDate + "'" + ')">' + i + '</a></li>';
+            }
+        } else {
+            if (page.pageNum - 3 < 1) {
+                for (var i = 1; i < page.pageNum; i++) {
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ',' + startDate + ',' + "'" + endDate + "'" + ')">' + i + '</a></li>';
+                }
+            } else {
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+                for (var i = page.pageNum - 3; i < page.pageNum; i++) {
+                    pageBody += '<li> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ',' + startDate + ',' + "'" + endDate + "'" + ')">' + i + '</a></li>';
+                }
+            }
+            //高亮当前页面
+            pageBody += '<li class="active"> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ',' + startDate + ',' + "'" + endDate + "'" + ')">' + i + '</a></li>';
+
+            if (page.pageNum + 4 > page.pages) {
+                for (var i = page.pageNum + 1; i <= page.pages; i++) {
+                    pageBody += '<li> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ',' + startDate + ',' + "'" + endDate + "'" + ')">' + i + '</a></li>';
+                }
+            } else {
+                for (var i = page.pageNum + 1; i < page.pageNum + 4; i++) {
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ',' + startDate + ',' + "'" + endDate + "'" + ')">' + i + '</a></li>';
+                }
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+            }
+
+        }
+
+        if (page.pageNum != page.pages)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pageNum + 1) + ',' + startDate + ',' + "'" + endDate + "'" + ')">下一页</a></li>';
+        pageBody += '<li><a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pages) + ',' + startDate + ',' + "'" + endDate + "'" + ')">尾页</a></li>';
+        pageBody += '<li><input type="text"  style="width: 40px; " id="pageNumberGo" oninput = "value=value.replace(/[^\\d]/g,' + "'" + "'" + ')">页</li>';
+        pageBody += '<li><a href="javascript:;" onclick="pagejumping(' + "'" + name + "'" + ',' + startDate + ',' + "'" + endDate + "'" + ',' + page.pages + ')">跳转</a></li>';
+        pageBody += '<li>&nbsp;&nbsp;&nbsp;&nbsp;共' + page.pageNum + '/' + page.pages + '页&nbsp;&nbsp;&nbsp;&nbsp;</li>';
+
+        return pageBody;
+    }
+
+    //根据条件点击页码跳转
+    function clickpage(name, number, value1, value2) {
+        //console.log("clickpage():"+name+" "+number);
+        if (name === "diagnosis")
+            findDiagnosisByTime(value1, value2, number);
+
+    }
+
+    //根据输入的页数跳转
+    function pagejumping(name, value1, value2, maxPages) {
+        var number = $("#pageNumberGo").val();
+        if (number == null || number == "") {
+            alert("请输入跳转页数");
+            return false;
+        } else if (number > maxPages) {
+            alert("当前输入的页码已超过最大页码");
+            return false;
+        }
+        clickpage(name, number, value1, value2);
+    }
+
+    //判断开始时间是否少于结束时间
+    function checkDateTime(dateStartTime, dateEndTime) {
+        if (dateStartTime === "" || dateStartTime == null)
+            return false;
+        if (dateEndTime === "" || dateEndTime == null)
+            return false;
+
+
+        var startTime = dateStartTime;
+        var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+        var endTime = dateEndTime;
+        var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+        if (end < start) {
+            alert("开始时间不能小于结束时间");
+            return false;
+        } else
+            return true;
+    }
+
+    //添加随访患者
+    function addFollowUpPatient(diagnosisId) {
+
+        if ($("#tr" + diagnosisId).length > 0) {
+            alert("该信息已添加");
+            return false;
+        }
+        $.ajax({
+            type: "get",
+            url: "/findDiagnosisById",
+            dataType: "json",
+            data: {"diagnosisId": diagnosisId},
+            success: function (map) {
+
+                console.log(map.diagnosis);
+                var diagnosis = map.diagnosis;
+                var tr = "";
+                var diagnosisDateTime = timestampToTime(diagnosis.diagnosisDate);
+                //设置表单信息
+                tr += '<tr id=' + '"tr' + diagnosis.diagnosisId + '"' + '><td>' + diagnosis.diagnosisId + '</td><td>' + diagnosis.patient.patientId
+                    + '</td><td>' + diagnosis.patient.patientName + '</td><td>' + diagnosis.doctor.userId + '</td><td>' + diagnosis.doctor.userName
+                    + '</td><td>' + diagnosis.diagnosisResult + '</td><td>' + diagnosisDateTime
+                    + '</td><td><a href="#" role="button" class=" btn btn-danger" ' +
+                    'onclick="deleteFollowUpPlan(' + "'tr" + diagnosis.diagnosisId + "'" + ')">×</a></td></tr>';
+                $("#follow_up_arrange").append(tr);
+            },
+            error: function () {
+                alert("找不到该诊断信息表，请检查输入是否正确");
+
+            }
+        })
+    }
+
+    function deleteFollowUpPlan(tr) {
+        $("#" + tr).remove();
+    }
+</script>
+</html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.OfficeMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Office">
+    <result column="officeId" jdbcType="VARCHAR" property="officeId" />
+    <result column="officeCategory" jdbcType="INTEGER" property="officeCategory" />
+    <result column="officeName" jdbcType="VARCHAR" property="officeName" />
+    <result column="srPosition" jdbcType="VARCHAR" property="srPosition" />
+    <result column="officeCapacity" jdbcType="INTEGER" property="officeCapacity" />
+  </resultMap>
+  <insert id="insert" parameterType="com.mrms.recoversystem.model.Office">
+    insert into office (officeId, officeCategory, officeName, 
+      srPosition, officeCapacity)
+    values (#{officeId,jdbcType=VARCHAR}, #{officeCategory,jdbcType=BIGINT}, #{officeName,jdbcType=VARCHAR}, 
+      #{srPosition,jdbcType=VARCHAR}, #{officeCapacity,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Office">
+    insert into office
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="officeId != null">
+        officeId,
+      </if>
+      <if test="officeCategory != null">
+        officeCategory,
+      </if>
+      <if test="officeName != null">
+        officeName,
+      </if>
+      <if test="srPosition != null">
+        srPosition,
+      </if>
+      <if test="officeCapacity != null">
+        officeCapacity,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="officeId != null">
+        #{officeId,jdbcType=VARCHAR},
+      </if>
+      <if test="officeCategory != null">
+        #{officeCategory,jdbcType=BIGINT},
+      </if>
+      <if test="officeName != null">
+        #{officeName,jdbcType=VARCHAR},
+      </if>
+      <if test="srPosition != null">
+        #{srPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="officeCapacity != null">
+        #{officeCapacity,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+    <select id="searchOffice" parameterType="com.mrms.recoversystem.model.Office"
+            resultType="com.mrms.recoversystem.model.Office">
+        select *
+        from office
+        <where>
+            <if test="officeId != null">
+                officeId=#{officeId}
+            </if>
+            <if test="officeCategory != null">
+              and  officeCategory=#{officeCategory}
+            </if>
+            <if test="officeName != null">
+              and  officeName=#{officeName}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from office
+        where officeId = #{officeId}
+    </select>
+
+  <update id="update" parameterType="com.mrms.recoversystem.model.Office">
+      update office
+      <set>
+          <if test="officeCategory != null">
+              officeCategory=#{officeCategory},
+          </if>
+          <if test="officeName != null">
+              officeName=#{officeName},
+          </if>
+          <if test="srPosition != null">
+              srPosition=#{srPosition},
+          </if>
+          <if test="officeCapacity != null">
+              officeCapacity=#{officeCapacity}
+          </if>
+      </set>
+      where officeId=#{officeId}
+  </update>
+    <delete id="delete" parameterType="java.lang.String">
+        delete *
+        from office
+        where officeId=#{officeId}
+    </delete>
+
+    <select id="searchOfficeByHigherOffice" parameterType="java.lang.String" resultType="com.mrms.recoversystem.model.Office">
+        select officeId , officeName
+        from office
+        where officeId like #{officeId};
+    </select>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.RecoverequipmentMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Recoverequipment">
+    <result column="rm_id" jdbcType="VARCHAR" property="rm_id" />
+    <result column="rm_name" jdbcType="VARCHAR" property="rm_name" />
+    <result column="officeId" jdbcType="VARCHAR" property="officeId"/>
+    <result column="rm_number" jdbcType="INTEGER" property="rm_number" />
+    <result column="rm_specifications" jdbcType="VARCHAR" property="rm_specifications" />
+    <result column="rm_classification" jdbcType="VARCHAR" property="rm_classification" />
+    <result column="rm_function" jdbcType="VARCHAR" property="rm_function" />
+    <result column="hourUnitPrice" jdbcType="DOUBLE" property="hourUnitPrice" />
+  </resultMap>
+  <resultMap id="queryResultMap" type="com.mrms.recoversystem.model.Recoverequipment">
+    <id column="rm_id" jdbcType="VARCHAR" property="rm_id" />
+    <result column="rm_name" jdbcType="VARCHAR" property="rm_name" />
+    <result column="rm_number" jdbcType="INTEGER" property="rm_number" />
+    <result column="rm_specifications" jdbcType="VARCHAR" property="rm_specifications" />
+    <result column="rm_classification" jdbcType="VARCHAR" property="rm_classification" />
+    <result column="rm_function" jdbcType="VARCHAR" property="rm_function" />
+    <result column="hourUnitPrice" jdbcType="DOUBLE" property="hourUnitPrice" />
+      <association property="office" javaType="com.mrms.recoversystem.model.Office" column="officeId">
+          <result column="officeId" jdbcType="VARCHAR" property="officeId" />
+          <result column="officeCategory" jdbcType="INTEGER" property="officeCategory" />
+          <result column="officeName" jdbcType="VARCHAR" property="officeName" />
+          <result column="srPosition" jdbcType="VARCHAR" property="srPosition" />
+          <result column="officeCapacity" jdbcType="INTEGER" property="officeCapacity" />
+      </association>
+  </resultMap>
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Recoverequipment">
+    insert into recoverequipment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rm_id != null">
+        rm_id,
+      </if>
+      <if test="officeId != null">
+        officeId,
+      </if>
+      <if test="rm_name != null">
+        rm_name,
+      </if>
+      <if test="rm_number != null">
+        rm_number,
+      </if>
+      <if test="rm_specifications != null">
+        rm_specifications,
+      </if>
+      <if test="rm_classification != null">
+        rm_classification,
+      </if>
+      <if test="rm_function != null">
+        rm_function,
+      </if>
+      <if test="hourUnitPrice != null">
+        hourUnitPrice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rm_id != null">
+        #{rm_id,jdbcType=VARCHAR},
+      </if>
+      <if test="officeId != null">
+        #{officeId,jdbcType=VARCHAR},
+      </if>
+      <if test="rm_name != null">
+        #{rm_name,jdbcType=VARCHAR},
+      </if>
+      <if test="rm_number != null">
+        #{rm_number,jdbcType=INTEGER},
+      </if>
+      <if test="rm_specifications != null">
+        #{rm_specifications,jdbcType=VARCHAR},
+      </if>
+      <if test="rm_classification != null">
+        #{rm_classification,jdbcType=VARCHAR},
+      </if>
+      <if test="rm_function != null">
+        #{rm_function,jdbcType=VARCHAR},
+      </if>
+      <if test="hourUnitPrice != null">
+        #{hourUnitPrice,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectEquipment" parameterType="java.lang.String" resultType="com.mrms.recoversystem.model.Recoverequipment">
+    select *
+    from recoverequipment
+    where rm_id= #{rm_id};
+  </select>
+  <!-- 返回值为Recoverequipmentlist -->
+  <select id="findById" parameterType="java.lang.String" resultMap="queryResultMap">
+        select re.*,o.*
+        from recoverequipment re , office o
+        where re.rm_id= #{rm_id} and re.officeId = o.officeId;
+    </select>
+
+
+  <!-- 返回值为List -->
+  <select id="select" parameterType="com.mrms.recoversystem.model.Recoverequipment" resultMap="queryResultMap">
+    select re.*,o.*
+    from recoverequipment re join office o on re.officeId = o.officeId
+    <where>
+      <if test="rm_id != null">
+        re.rm_id like #{rm_id}
+      </if>
+      <if test="officeId != null">
+      and  re.officeId=#{officeId}
+      </if>
+      <if test="rm_name != null">
+      and  re.rm_name like #{rm_name}
+      </if>
+      <if test="rm_specifications != null">
+      and  re.rm_specifications=#{rm_specifications}
+      </if>
+      <if test="rm_classification != null">
+      and  re.rm_classification=#{rm_classification}
+      </if>
+
+    </where>
+  </select>
+  <update id="updateSelective" parameterType="com.mrms.recoversystem.model.Recoverequipment">
+    update recoverequipment
+    <set>
+      <if test="officeId != null">
+        officeId=#{officeId},
+      </if>
+      <if test="rm_name != null">
+        rm_name=#{rm_name},
+      </if>
+      <if test="rm_number != null">
+        rm_number=#{rm_number},
+      </if>
+      <if test="rm_specifications != null">
+        rm_specifications=#{rm_specifications},
+      </if>
+      <if test="rm_classification != null">
+        rm_classification=#{rm_classification},
+      </if>
+      <if test="rm_function != null">
+        rm_function=#{rm_function},
+      </if>
+      <if test="hourUnitPrice != null">
+        hourUnitPrice=#{hourUnitPrice}
+      </if>
+    </set>
+    where  rm_id=#{rm_id}
+  </update>
+  <delete id="delete" parameterType="com.mrms.recoversystem.model.Recoverequipment">
+    delete
+    from recoverequipment
+    where rm_id=#{rm_id}
+  </delete>
+</mapper>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>挂号模块</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+     <script src="../js/base-method.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+</head>
+<body style="margin:0;">
+<!-- 引入导航栏 -->
+<div class="navbar navbar-inverse"  >
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar">
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </a> <a id="home_page" href="../html/MRMS_Doctor.html" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">挂号管理<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="../html/MRMS_Collector_Register.html" >挂号</a></li>
+                            <li> <a href="../html/MRMS_Collector_Register_List.html" >挂号列表</a></li>
+                        </ul>
+                    </li>
+
+                    <li> <a href="../html/MRMS_Collector_Payment.html">医疗缴费</a></li>
+
+                    <li>
+                        <a href="../html/MRMS_Collector_AddPatient.html">添加患者信息</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <div class="btn-group">
+                        <button id="user-name" class="btn" ></button>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu" >
+                            <li>
+                                <a href="../html/MRMS_Personal_Center.html" onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                            </li>
+                            <li>
+                                <a href="/signOut">退出</a>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+
+        <div class="span12">
+
+            <div id="register_list_model" >
+                <div class="span12">
+                    <h3 class="text-center">挂号列表</h3>
+                    <div id="search_div">
+                        <label for="searchRegisterId">流水号<input id="searchRegisterId"  name="registerId" type="text" />
+                            <button class="btn"  onclick="findRegister($('#searchRegisterId').val())">查找</button>
+                            <button class="btn"  onclick="findRegisters(1)">总列表</button>
+                        </label>
+                    </div>
+                    <!--收费员Id -->
+                    <input type="hidden" id="userId" >
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>流水号</th>
+                            <th>患者ID</th>
+                            <th>患者姓名</th>
+                            <th>医生</th>
+                            <th>科室</th>
+                            <th>就诊状态</th>
+                            <th>挂号类别</th>
+                            <th>挂号费</th>
+                            <th>挂号日期</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="register_list">
+
+                        </tbody>
+                    </table>
+                    <div class="pagination pagination-centered">
+                        <ul id="register_pagination">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 找不到患者信息，提示是否跳转到患者添加页面 -->
+            <div id="delete_register" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                </div>
+                <div class="modal-body">
+                    <h3 >
+                        是否确定取消挂号？
+                    </h3>
+                    <input id="registerId" type="text" name="registerId" readonly="readonly">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="deleteRegister($('#registerId').val())"  >是</button>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true" >否</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var userId = getCookie('userId');
+        var userName = getCookie('userName');
+        document.getElementById("user-name").innerHTML = userName;
+        $("#userId").val(userId);
+        findRegisters(1);
+
+    });
+
+    //通过挂号单寻找挂号单信息
+    function findRegister(registerId) {
+        console.log(registerId);
+        $.ajax({
+            type:"get",
+            url:"/findRegistersById",
+            data:{"registerId":registerId},
+            dataType:"json",
+            success:function (register) {
+
+                $("#register_list").html("");
+                var tbody = "";
+
+                var registrationCategory = judgeRegistrationCategory(register.registrationCategory);
+                var visStatus = judgeVisStatus(register.visStatus);
+                var date =timestampToTime(register.registerDate);
+                tbody += '<tr id='+'"'+register.registerId+'"'+'><td>'+ register.registerId +'</td><td>'+ register.patient.patientId
+                    +'</td><td>'+ register.patientName +'</td><td>'+register.doctor.userName+'</td><td>'+register.doctor.officeId
+                    +'</td><td>'+ visStatus +'</td><td>'+ registrationCategory+'</td><td>'+ register.diagnosisPrice
+                    +'元</td><td>'+ date
+                    +'</td><td><a href="#delete_register" role="button" class=" btn btn-danger" data-toggle="modal"'  +
+                    'onclick="setDeleteModelInfo('+"'"+register.registerId+"'"+')">退号</button></td></tr>';
+                $("#register_list").append(tbody);
+            },
+            error:function () {
+                alert("找不到regiter");
+                return ;
+            }
+        })
+    }
+
+    //寻找所有挂号信息
+    function findRegisters(pageNum){
+        $("#searchRegisterId").val("");
+        $.ajax({
+            type:"get",
+            url:"/findRegistersByTollCollector",
+            data:{
+                pageNum:pageNum,
+                pageSize:5
+            },
+            dataType:"json",
+            success:function (map) {
+                console.log(map.registers);
+                $("#register_list").html("");
+                $("#register_pagination").html("");
+                var tbody = "";
+
+                $.each(map.registers.list,function (i,register) {
+                    var registrationCategory = judgeRegistrationCategory(register.registrationCategory);
+                    var visStatus = judgeVisStatus(register.visStatus);
+                    var date =timestampToTime(register.registerDate);
+                    tbody += '<tr id='+'"'+register.registerId+'"'+'><td>'+ register.registerId +'</td><td>'+ register.patient.patientId
+                        +'</td><td>'+ register.patientName +'</td><td>'+register.doctor.userName+'</td><td>'+register.doctor.officeId
+                        +'</td><td>'+ visStatus +'</td><td>'+ registrationCategory+'</td><td>'+ register.diagnosisPrice
+                        +'元</td><td>'+ date
+                        + '</td><td><a href="#delete_register" role="button" class=" btn btn-danger" data-toggle="modal"'  +
+                        'onclick="setDeleteModelInfo('+"'"+register.registerId+"'"+')">退号</button></td></tr>';
+                });
+
+                var page = map.registers;
+                var pageBody = pagination(page, "register");
+                $("#register_pagination").append(pageBody);
+                $("#register_list").append(tbody);
+            },
+            error:function () {
+                alert("找不到该挂号单");
+                return ;
+            }
+        })
+    }
+
+
+
+    //自定义分页插件
+    function pagination(page,name) {
+        var pageBody = "";
+        if (page.pages<=1)
+            return false;
+        pageBody += '<li><a href="javascript:;" onclick="clickpage('+"'"+name+"'"+',1)" >首页</a></li>';
+        if (page.pageNum != 1)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+ (page.pageNum-1)+')">上一页</a></li>';
+        //当总页数少于8时，显示所有的页数，否则动态变换
+        if (page.pages<7){
+            for (var i=1 ; i<=page.pages;i++) {
+                if(i == page.pageNum)
+                    pageBody += '<li class="active"> <a  href="javascript:;"  onclick="clickpage('+"'"+name+"'"+','+i +')">'+i+'</a></li>';
+                else
+                    pageBody += '<li> <a  href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+i +')">'+i+'</a></li>';
+            }
+        }
+        else{
+            if(page.pageNum-3<1){
+                for (var i=1; i<page.pageNum;i++) {
+                    pageBody += '<li> <a  href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+i +')">'+i+'</a></li>';
+                }
+            }else{
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+                for (var i=page.pageNum-3; i<page.pageNum;i++) {
+                    pageBody += '<li> <a  href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+i +')">'+i+'</a></li>';
+                }
+            }
+            //高亮当前页面
+            pageBody += '<li class="active"> <a  href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+i +')">'+i+'</a></li>';
+
+            if(page.pageNum+4>page.pages){
+                for (var i=page.pageNum+1; i<=page.pages;i++) {
+                    pageBody += '<li> <a  href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+i +')">'+i+'</a></li>';
+                }
+            }
+            else{
+                for (var i=page.pageNum+1; i<page.pageNum+4;i++) {
+                    pageBody += '<li> <a  href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+i +')">'+i+'</a></li>';
+                }
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+            }
+
+        }
+
+        if (page.pageNum != page.pages)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+ (page.pageNum+1)+')">下一页</a></li>';
+        pageBody += '<li><a href="javascript:;" onclick="clickpage('+"'"+name+"'"+','+ (page.pages)+')">尾页</a></li>';
+        pageBody += '<li><input type="text"  style="width: 40px; " id="pageNumberGo" >页</li>';
+        pageBody += '<li><a href="javascript:;" onclick="pagejumping('+"'"+ name+"'" +')">跳转</a></li>';
+        pageBody += '<li>&nbsp;&nbsp;&nbsp;&nbsp;共'+page.pageNum+'/'+page.pages+'页&nbsp;&nbsp;&nbsp;&nbsp;</li>';
+
+        return pageBody;
+    }
+
+    //根据条件点击页码跳转
+    function clickpage(name,number) {
+        //console.log("clickpage():"+name+" "+number);
+        if (name == "register")
+            findRegisters(number);
+    }
+    //根据输入的页数跳转
+    function pagejumping(name) {
+        var number = $("#pageNumberGo").val();
+        if (number == null || number == ""){
+            alert("请输入跳转页数");
+            return false;
+        }
+        clickpage(name,number);
+    }
+
+    //点击删除按钮时设置隐藏的registerId；
+    function setDeleteModelInfo(registerId) {
+        $("#registerId").val(registerId);
+    }
+
+    //删除该register
+    function deleteRegister(registerId) {
+        console.log(registerId);
+        $.ajax({
+            type:"post",
+            url:"/deleteRegister",
+            data:{"registerId":registerId},
+            success:function (result) {
+                if (result== true){
+                    alert("成功取消挂号！");
+                    $("#delete_register").modal("hide");
+                    $("#"+registerId).remove();
+
+                }
+                else{
+                    alert("取消挂号失败，该患者已就诊");
+
+                }
+            },
+            error:function () {
+                return ;
+            }
+        })
+    }
+
+
+    function judgeRegistrationCategory(registrationCategory) {
+        if (registrationCategory == 1)
+            return "专家门诊";
+        else if (registrationCategory == 2)
+            return "专业门诊" ;
+        else if (registrationCategory == 3)
+            return "普通门诊";
+    }
+    function judgeVisStatus(visStatus) {
+        if (visStatus == 1)
+            return "待诊";
+        else if (visStatus == 2)
+            return "已就诊";
+        else if (visStatus == 3)
+            return "过号";
+        else if (visStatus == 4)
+            return "退号";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++)
+        {
+            var c = ca[i].trim();
+            if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+        }
+        return "";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.DiagnosisMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Diagnosis">
+    <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="registerId" jdbcType="VARCHAR" property="registerId" />
+    <result column="doctorId" jdbcType="INTEGER" property="doctorId" />
+    <result column="patientId" jdbcType="INTEGER" property="patientId" />
+    <result column="chiefComplaint" jdbcType="VARCHAR" property="chiefComplaint" />
+    <result column="recoverPlan" jdbcType="VARCHAR" property="recoverPlan" />
+    <result column="sickClassification" jdbcType="VARCHAR" property="sickClassification" />
+    <result column="sickLevel" jdbcType="INTEGER" property="sickLevel" />
+    <result column="diagnosisResult" jdbcType="VARCHAR" property="diagnosisResult" />
+    <result column="diagnosisDate" jdbcType="TIMESTAMP" property="diagnosisDate" />
+  </resultMap>
+  <resultMap id="queryResultMap" type="com.mrms.recoversystem.model.Diagnosis">
+    <id column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="registerId" jdbcType="VARCHAR" property="registerId" />
+    <result column="chiefComplaint" jdbcType="VARCHAR" property="chiefComplaint" />
+    <result column="recoverPlan" jdbcType="VARCHAR" property="recoverPlan" />
+    <result column="sickClassification" jdbcType="VARCHAR" property="sickClassification" />
+    <result column="sickLevel" jdbcType="INTEGER" property="sickLevel" />
+    <result column="diagnosisResult" jdbcType="VARCHAR" property="diagnosisResult" />
+    <result column="diagnosisDate" jdbcType="TIMESTAMP" property="diagnosisDate" />
+    <association property="patient" javaType="com.mrms.recoversystem.model.Patient" column="patientId">
+      <result column="patientId" jdbcType="INTEGER" property="patientId" />
+      <result column="patientName" jdbcType="VARCHAR" property="patientName" />
+      <result column="age" jdbcType="INTEGER" property="age" />
+      <result column="nation" jdbcType="VARCHAR" property="nation" />
+      <result column="nativePlace" jdbcType="VARCHAR" property="nativePlace" />
+      <result column="carId" jdbcType="VARCHAR" property="carId" />
+      <result column="homeAdress" jdbcType="VARCHAR" property="homeAdress" />
+      <result column="phoneNumber" jdbcType="VARCHAR" property="phoneNumber" />
+      <result column="mpBirthday" jdbcType="DATE" property="mpBirthday" />
+      <result column="sex" jdbcType="BIT" property="sex" />
+      <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+      <result column="workPlace" jdbcType="VARCHAR" property="workPlace" />
+      <result column="height" jdbcType="DOUBLE" property="height" />
+      <result column="weight" jdbcType="DOUBLE" property="weight" />
+      <result column="bloodType" jdbcType="VARCHAR" property="bloodType" />
+      <result column="famSickHistroy" jdbcType="BIT" property="famSickHistroy" />
+      <result column="sickHistrionicInstruction" jdbcType="VARCHAR" property="sickHistrionicInstruction" />
+      <result column="drugAllergy" jdbcType="BIT" property="drugAllergy" />
+      <result column="drugAllergyIntroduction" jdbcType="VARCHAR" property="drugAllergyIntroduction" />
+    </association>
+    <association property="doctor" column="doctorId"  javaType="com.mrms.recoversystem.model.Medicalpersonal">
+      <id column="userId" jdbcType="INTEGER" property="userId" />
+      <result column="officeId" jdbcType="VARCHAR" property="officeId" />
+      <result column="userName" jdbcType="VARCHAR" property="userName" />
+      <result column="passWord" jdbcType="VARCHAR" property="passWord" />
+      <result column="jobPosition" jdbcType="VARCHAR" property="jobPosition" />
+      <result column="power" jdbcType="INTEGER" property="power" />
+      <result column="sex" jdbcType="BIT" property="sex" />
+      <result column="age" jdbcType="INTEGER" property="age" />
+      <result column="mpBirthday" jdbcType="DATE" property="mpBirthday" />
+      <result column="subject" jdbcType="VARCHAR" property="subject" />
+      <result column="doctorIntroduction" jdbcType="VARCHAR" property="doctorIntroduction" />
+    </association>
+  </resultMap>
+
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Diagnosis">
+    insert into diagnosis
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="diagnosisId != null">
+        diagnosisId,
+      </if>
+      <if test="registerId != null">
+        registerId,
+      </if>
+      <if test="doctorId != null">
+        doctorId,
+      </if>
+      <if test="patientId != null">
+        patientId,
+      </if>
+      <if test="chiefComplaint != null">
+        chiefComplaint,
+      </if>
+      <if test="recoverPlan != null">
+        recoverPlan,
+      </if>
+      <if test="sickClassification != null">
+        sickClassification,
+      </if>
+      <if test="sickLevel != null">
+        sickLevel,
+      </if>
+      <if test="diagnosisResult != null">
+        diagnosisResult,
+      </if>
+      <if test="diagnosisDate != null">
+        diagnosisDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="diagnosisId != null">
+        #{diagnosisId,jdbcType=VARCHAR},
+      </if>
+      <if test="registerId != null">
+        #{registerId,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorId != null">
+        #{doctorId,jdbcType=INTEGER},
+      </if>
+      <if test="patientId != null">
+        #{patientId,jdbcType=INTEGER},
+      </if>
+      <if test="chiefComplaint != null">
+        #{chiefComplaint,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverPlan != null">
+        #{recoverPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="sickClassification != null">
+        #{sickClassification,jdbcType=VARCHAR},
+      </if>
+      <if test="sickLevel != null">
+        #{sickLevel,jdbcType=INTEGER},
+      </if>
+      <if test="diagnosisResult != null">
+        #{diagnosisResult,jdbcType=VARCHAR},
+      </if>
+      <if test="diagnosisDate != null">
+        #{diagnosisDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="selectDiagnosis" parameterType="com.mrms.recoversystem.model.Diagnosis" resultMap="queryResultMap" >
+    select *
+    from diagnosis
+    where diagnosisId = #{diagnosis}
+
+  </select>
+
+  <select id="searchDiagnosis" parameterType="com.mrms.recoversystem.model.Diagnosis" resultMap="queryResultMap">
+    select d.*,p.*,mp.*
+    from diagnosis d , patient p , medicalpersonal mp
+    <where>
+      d.patientId = p.patientId and d.doctorId = mp.userId
+      <if test="diagnosisId != null">
+      and  diagnosisId = #{diagnosisId}
+      </if>
+      <if test="registerId != null">
+      and  registerId=#{registerId}
+      </if>
+    </where>
+  </select>
+
+    <update id="updateDiagnosis" parameterType="com.mrms.recoversystem.model.Diagnosis">
+    update diagnosis
+    <set>
+      <if test="registerId != null">
+          registerId=#{registerId},
+      </if>
+      <if test="doctorId != null">
+          doctorId=#{doctorId},
+      </if>
+      <if test="patientId != null">
+          patientId=#{patientId},
+      </if>
+      <if test="chiefComplaint != null">
+          chiefComplaint=#{chiefComplaint},
+      </if>
+      <if test="recoverPlan != null">
+        recoverPlan=#{recoverPlan},
+      </if>
+      <if test="sickClassification != null">
+          sickClassification=#{sickClassification},
+      </if>
+      <if test="sickLevel != null">
+          sickLevel=#{sickLevel},
+      </if>
+      <if test="diagnosisResult != null">
+          diagnosisResult=#{diagnosisResult},
+      </if>
+      <if test="diagnosisDate != null">
+         diagnosisDate=#{diagnosisDate}
+      </if>
+    </set>
+    where diagnosisId=#{diagnosisId}
+  </update>
+
+    <delete id="deleteDiagnosis" parameterType="com.mrms.recoversystem.model.Diagnosis">
+    delete
+    from diagnosis
+    where diagnosisId=#{diagnosisId}
+  </delete>
+
+  <select id="getMaxDiagnosisId" resultType="java.lang.String">
+    select max(diagnosisId)
+    from diagnosis
+    order by diagnosisId;
+  </select>
+  <select id="getFollowUpPatientList" resultMap="queryResultMap">
+    select d.*,p.patientId,p.patientName,mp.*
+    from diagnosis d join patient p on d.patientId = p.patientId join medicalpersonal mp on d.doctorId = mp.userId, paymentlist pl
+    where d.diagnosisId = pl.diagnosisId and d.doctorId = #{doctorId} and d.diagnosisDate between #{startDate} and #{endDate}
+    order by d.doctorId
+  </select>
+</mapper>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/base-method.js"></script>
+    <script src="../js/personal_center.js"></script>
+</head>
+<body style="margin: 0px;">
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a data-target=".navbar-responsive-collapse"
+               data-toggle="collapse" class="btn btn-navbar"><span class="icon-bar"></span><span
+                    class="icon-bar"></span><span class="icon-bar"></span></a>
+            <a id="home_page" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li>
+                        <a id="main_page" data-toggle="dropdown" class="dropdown-toggle" href="#"
+                           onclick="returnMainPage()">主页</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li>
+                        <a href="#">消息</a>
+                    </li>
+                    <li class="divider-vertical">
+                        <div class="btn-group">
+                            <button id="user-name" class="btn"></button>
+                            <button data-toggle="dropdown" class="btn dropdown-toggle"><span
+                                    class="caret"></span></button>
+                            <ul class="dropdown-menu psersonal_list">
+                                <li data-id="personal_set">
+                                    <a href="#" onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                                </li>
+                                <li>
+                                    <a href="/signOut">退出</a>
+                                </li>
+                                <li class="divider"></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+
+            <div class="row-fluid">
+
+                <!-- 引入左侧功能列表 -->
+                <div class="span2">
+                    <div align="center">
+                        <img alt="140x140" src="../img/Red_Cross.png" class="img-circle"/>
+                    </div>
+                    <div style="padding-top:10px;">
+                        <ul class="nav nav-list ">
+                            <li data-id="center">
+                            <li class="active"><a href="../html/MRMS_Personal_Center.html">用户中心</a></li>
+                            </li>
+                            <li data-id="personalInfo"><a href="../html/MRMS_Personal_Center_Info.html">个人信息</a></li>
+
+                            <li data-id="exchangePassWord"><a href="../html/MRMS_Personal_Center_ChangePassWord.html">修改密码</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div id="content" class="span10">
+                    <div>
+                        <h3>随访计划公告</h3>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="row-fluid">
+                                    <div class="span1"></div>
+                                    <div class="span9">
+                                        <div>
+                                            <table class="table table-condensed">
+                                                <thead>
+                                                <th>随访计划编号</th>
+                                                <th>随访时间</th>
+                                                <th></th>
+                                                </thead>
+                                                <tbody id="flupplan_list">
+
+                                                </tbody>
+                                            </table>
+                                            <div class="pagination pagination-centered">
+                                                <ul id="flupplan_list_pagination">
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="span2">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <!-- 随访计划详细信息 -->
+                        <div id="flupplan_info" style="width: auto;" class="modal hide fade" role="dialog"
+                             aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="flupplanModal">
+                                    随访计划
+                                </h3>
+                            </div>
+                            <div class="modal-body">
+                                <form id="update_flupplan">
+                                    <table id="fuplan_table"
+                                           class="table  ">
+                                        <tbody>
+                                        <tr>
+                                            <td>随访计划编号:</td>
+                                            <td>
+                                                <p id="followUpId"></p>
+                                            </td>
+                                        <tr>
+                                            <td>随访时间:</td>
+                                            <td>
+                                                <p id="followUpTime"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>选择治疗时间段内的病人进行随访:</td>
+                                            <td>
+                                                <p id="diagnosisTime"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>随访计划:</td>
+                                            <td>
+                                                <p id="fuPlan"></p>
+
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </form>
+
+                                <div class="pagination pagination-centered">
+                                    <ul id="drug_pagination">
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
+                        <!-- 指定时间内搜索到的诊断患者列表 -->
+                        <div id="appoint_time_diagnosis_list" style="width: auto;" class="modal hide fade" role="dialog"
+                             aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="equipment">
+                                    诊断单列表
+                                </h3>
+                            </div>
+                            <div class="modal-body">
+                                <table border="1">
+                                    <thead>
+                                    <tr>
+                                        <th>诊断单号</th>
+                                        <th>患者编号</th>
+                                        <th>患者姓名</th>
+                                        <th>医生编号</th>
+                                        <th>诊断医生</th>
+                                        <th>诊断结论</th>
+                                        <th>诊断时间</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="diagnosis_list_info">
+
+                                    </tbody>
+
+                                </table>
+                                <div class="pagination pagination-centered">
+                                    <ul id="diagnosis_list_pagination">
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
+                        <!-- 患者信息列表 -->
+                        <div id="patient_info" style="width: 700px;z-index:8889" class="modal hide fade" role="dialog"
+                             aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3>
+                                    患者治疗信息
+                                </h3>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td>患者编号</td>
+                                        <td><label id="patient_id"></label></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>姓名</td>
+                                        <td><label id="patientName"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>性别</td>
+                                        <td><label id="sex"></label></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>年龄</td>
+                                        <td>
+                                            <lable id="age"></lable>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>民族</label></td>
+                                        <td><label id="nation"></label></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>籍贯</td>
+                                        <td>
+                                            <lable id="nativePlace"></lable>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><label>家庭地址</label></td>
+                                        <td><label id="homeAdress"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>身份证号码</label></td>
+                                        <td><label id="carId"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>联系方式</label></td>
+                                        <td><label id="phoneNumber"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>出生日期</label></td>
+                                        <td>
+                                            <lable id="mpBirthday"></lable>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>职业</label></td>
+                                        <td><label id="occupation"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>单位</label></td>
+                                        <td><label id="workPlace"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>身高</label></td>
+                                        <td><label id="height"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>体重</label></td>
+                                        <td><label id="weight"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>血型</label></td>
+                                        <td><label id="bloodType"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>是否存在家族病史</label></td>
+                                        <td><label id="famSickHistroy"></label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>家族病史说明</label></td>
+                                        <td>
+                                            <lable id="sickHistrionicInstruction"></lable>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>是否药物过敏</label></td>
+                                        <td>
+                                            <lable id="drugAllergy"></lable>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>药物过敏说明</label></td>
+                                        <td>
+                                            <lable id="drugAllergyIntroduction"></lable>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function (ev) {
+        var homePage = getCookie("href");
+        var power = getCookie("power");
+        var userName = getCookie("userName");
+        console.log(homePage + " " + userName);
+        //$("#userId").val();
+        $("#user-name").html(userName);
+        $("#home_page").attr("href", homePage);
+        findFlupplanList(1);
+    });
+
+    //根据用户身份返回主页
+    function returnMainPage() {
+        var power = getCookie('power');
+        var href = "";
+        if (power == 20181)
+            href = "../html/MRMS_Doctor.html";
+        else if (power == 20182)
+            href = "../html/MRMS_Register.html";
+        else if (power == 20183)
+            href = "../html/MRMS_Manager_Center.html";
+
+        $("#main_page").attr("href", href);
+        $(location).attr("href", href);
+    }
+
+    //根据随访计划ID寻找随访计划的详细信息
+    function findFlupplans(followUpId) {
+
+        $.ajax({
+            url: "/findFlupplanById",
+            type: "get",
+            data: {
+                followUpId: followUpId
+            },
+            success: function (flupplan) {
+                console.log(flupplan);
+                $("#followUpId").text(flupplan.followUpId);
+                $("#diagnosisTime").text(timestampToDate(flupplan.digsStartTime) + "   至   " + timestampToDate(flupplan.digsEndTime));
+                $("#followUpTime").text(timestampToDate(flupplan.fuStartTime) + "   至   " + timestampToDate(flupplan.fuEndTime));
+                $("#fuPlan").text(flupplan.fuPlan);
+            },
+            error: function () {
+
+            }
+        });
+
+    }
+
+    //设置随访计划列表
+    function findFlupplanList(pageNum) {
+        $.ajax({
+            type: "get",
+            url: "/findFlupplanList",
+            data: {
+                pageNum: pageNum,
+                pageSize: 5
+            },
+            dataType: "json",
+            success: function (map) {
+                console.log(map.flupplans);
+                $("#flupplan_list").html("");
+                $("#flupplan_list_pagination").html("");
+                var tbody = "";
+
+                $.each(map.flupplans.list, function (i, flupplan) {
+                    var releaseDate = timestampToDate(flupplan.releaseDate);
+                    tbody += '<tr id=' + '"' + flupplan.followUpId + '"' + '><td>' + flupplan.followUpId + '</td><td>' + releaseDate
+                        + '</td><td><a href="#flupplan_info" role="button" class=" btn btn-primary" data-toggle="modal"' +
+                        'onclick="findFlupplans(' + "'" + flupplan.followUpId + "'" + ')">详细信息</a></td></tr>';
+                });
+
+                var page = map.flupplans;
+                var pageBody = pagination(page, "flupplans");
+                $("#flupplan_list_pagination").append(pageBody);
+                $("#flupplan_list").append(tbody);
+
+            },
+            error: function () {
+                alert("找不到该挂号单");
+                return;
+            }
+        })
+    }
+
+    //查找并设置诊断记录信息
+    function findDiagnosisByDiagnosisId(diagnosisId) {
+        console.log(diagnosisId);
+        if (diagnosisId == null || diagnosisId == "")
+            return;
+
+        $.ajax({
+            type: "get",
+            url: "/findDiagnosisById",
+            dataType: "json",
+            data: {"diagnosisId": diagnosisId},
+            success: function (map) {
+
+                console.log(map.diagnosis);
+                var diagnosis = map.diagnosis;
+                //设置表单信息
+                $("#doctor_id").text(diagnosis.doctor.userId);
+                $("#doctorName").text(diagnosis.doctor.userName);
+                $("#patient_name").text(diagnosis.patient.patientName);
+                $("#patient_id").text(diagnosis.patient.patientId);
+                $("#sick_classification").text(diagnosis.sickClassification);
+                $("#sick_level").text(diagnosis.sickLevel);
+                $("#chiefComplain").text(diagnosis.chiefComplaint);    //病因
+                $("#diagnosisResult").text(diagnosis.diagnosisResult); //诊断结果
+                $("#recoverPlan").text(diagnosis.recoverPlan);             //康复计划
+
+            },
+            error: function () {
+                alert("找不到该诊断信息表，请检查输入是否正确");
+
+            }
+        })
+
+    }
+
+    //自定义分页插件
+    function pagination(page, name) {
+        var pageBody = "";
+        pageBody += '<li><a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',1,' + ')" >首页</a></li>';
+        if (page.pageNum != 1)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pageNum - 1) + ')">上一页</a></li>';
+        //假如总页数只有1页时，不设置分页
+        //当总页数少于7时，显示所有的页数，否则动态变换
+        var al = '';
+        if (page.pages < 7) {
+            for (var i = 1; i <= page.pages; i++) {
+                if (i == page.pageNum)
+                    pageBody += '<li class="active"><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                else
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+            }
+        } else {
+            if (page.pageNum - 3 < 1) {
+                for (var i = 1; i < page.pageNum; i++) {
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+            } else {
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+                for (var i = page.pageNum - 3; i < page.pageNum; i++) {
+                    pageBody += '<li> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+            }
+            //高亮当前页面
+            pageBody += '<li class="active"> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+
+            if (page.pageNum + 4 > page.pages) {
+                for (var i = page.pageNum + 1; i <= page.pages; i++) {
+                    pageBody += '<li> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+            } else {
+                for (var i = page.pageNum + 1; i < page.pageNum + 4; i++) {
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+            }
+
+        }
+
+        if (page.pageNum != page.pages)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pageNum + 1) + ')">下一页</a></li>';
+        pageBody += '<li><a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pages) + ')">尾页</a></li>';
+        pageBody += '<li><input type="text"  style="width: 40px; " id="pageNumberGo" oninput = "value=value.replace(/[^\\d]/g,' + "'" + "'" + ')">页</li>';
+        pageBody += '<li><a href="javascript:;" onclick="pagejumping(' + "'" + name + "'," + page.pages + ')">跳转</a></li>';
+        pageBody += '<li>&nbsp;&nbsp;&nbsp;&nbsp;共' + page.pageNum + '/' + page.pages + '页&nbsp;&nbsp;&nbsp;&nbsp;</li>';
+
+        return pageBody;
+    }
+
+    //根据条件点击页码跳转
+    function clickpage(name, number) {
+        //console.log("clickpage():"+name+" "+number);
+        if (name === "flupplans")
+            findFlupplanList(number);
+
+    }
+
+    //根据输入的页数跳转
+    function pagejumping(name, maxPages) {
+        var number = $("#pageNumberGo").val();
+        if (number == null || number == "") {
+            alert("请输入跳转页数");
+            return false;
+        } else if (number > maxPages) {
+            alert("当前输入的页码已超过最大页码");
+            return false;
+        }
+        clickpage(name, number);
+    }
+
+    //判断开始时间是否少于结束时间
+    function checkDateTime(dateStartTime, dateEndTime) {
+        if (dateStartTime === "" || dateStartTime == null)
+            return false;
+        if (dateEndTime === "" || dateEndTime == null)
+            return false;
+
+
+        var startTime = dateStartTime;
+        var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+        var endTime = dateEndTime;
+        var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+        if (end < start) {
+            alert("开始时间不能小于结束时间");
+            return false;
+        } else
+            return true;
+    }
+
+</script>
+</html>

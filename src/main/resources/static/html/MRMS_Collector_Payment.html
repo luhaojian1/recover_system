@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>缴费模块</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/base-method.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <!--
+    <script src="../js/payment.js"></script>
+     -->
+</head>
+<body style="margin:0;">
+<!-- 引入导航栏 -->
+<div class="navbar navbar-inverse"  >
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar">
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </a><a id="home_page" href="../html/MRMS_Doctor.html" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">挂号管理<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="../html/MRMS_Collector_Register_List.html" >挂号</a></li>
+                            <li> <a href="../html/MRMS_Collector_Register_List.html" >挂号列表</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="active"> <a href="../html/MRMS_Collector_Payment.html">医疗缴费</a></li>
+
+
+
+                    <li>
+                        <a href="../html/MRMS_Collector_AddPatient.html">添加患者信息</a>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <div class="btn-group">
+                        <button id="user-name" class="btn" ></button>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu" >
+                            <li>
+                                <a href="../html/MRMS_Personal_Center.html" onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                            </li>
+                            <li>
+                                <a href="/signOut">退出</a>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+
+        <div  class="span12">
+            <h3 class="text-center">医疗缴费</h3>
+            <div class="span12">
+                <div class="row-fluid">
+                    <div class="span4" style="margin: 0px;">
+                        <h4 class="text-center">治疗单</h4>
+                        <hr>
+                        <label for="searchDiagnosisId">诊断单号
+                            <input id="searchDiagnosisId" class="input-medium search-query" type="text" />
+                            <button class="btn"  onclick="findPaymentByDiagnosisId($('#searchDiagnosisId').val())">查找</button>
+                        </label>
+                        <br>
+                    </div>
+                    <div class="span8">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <br>
+                    <!-- 医疗单信息列表 -->
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <div id="payment_div_form" >
+                                <form id = "payment_list">
+                                    <table class="table  ">
+                                        <tbody id="paymentlist_info">
+                                        <tr><td><label for="diagnosisId">诊断单号</label></td><td><input id="diagnosisId" name="diagnosisId" readonly="readonly"></td></tr>
+                                        <tr><td><label for="patientId">患者编号</label></td><td><input id="patientId" name="patientId" readonly="readonly"></td></tr>
+                                        <tr><td><label for="patientName">患者姓名</label></td><td><input id="patientName"  readonly="readonly"></td></tr>
+                                        <tr><td><label for="doctorId">医生编号</label></td><td><input id="doctorId" name="userId" readonly="readonly"></td></tr>
+                                        <tr><td><label for="doctorName">医生姓名</label></td><td><input id="doctorName"  readonly="readonly"></td></tr>
+                                        <tr><td><label for="sumPrice">治疗费用</label></td><td><input id="sumPrice" name="diagnosisSumPrice" readonly="readonly">元</td></tr>
+                                        <tr><td><label for="totalTreatTimes">治疗次数</label></td><td><input id="totalTreatTimes" name="totalTreatTimes" readonly="readonly">次</td></tr>
+                                        <tr><td><label for="payStatus">缴费状态</label></td><td><select style="width: 80px;" id="payStatus" name="payStatus">
+                                            <option value=""></option>
+                                            <option value="1">未付款</option>
+                                            <option value="2">已付款</option>
+                                        </select>
+                                        </td></tr>
+                                        <tr><td><input id="user_id" type="hidden" name="tollCollector" value=""></td></tr>
+                                        </tbody>
+
+                                    </table>
+
+                                </form>
+                                <div>
+                                    <button class="btn btn-primary" onclick="setPayment($('#payment_list'))">确定</button>
+                                    <button id="resetForm" class="btn btn-warning" type="reset" onclick="resetPayment()">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span6">
+                            <div class="span12">
+                                <table class="table  table-condensed table-responsive">
+                                    <thead class="table-bordered">
+                                    <tr>
+                                        <th>
+                                            药物编号
+                                        </th>
+                                        <th>
+                                            药物名称
+                                        </th>
+                                        <th>
+                                            用药天数
+                                        </th>
+                                        <th>
+                                            药物价格
+                                        </th>
+                                        <th>开单时间</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="drugList_info">
+
+                                    </tbody>
+                                </table>
+
+                                <table class="table  table-condensed table-responsive">
+                                    <thead class="table-bordered">
+                                    <tr>
+                                        <th>
+                                            器材编号
+                                        </th>
+                                        <th>
+                                            器材名称
+                                        </th>
+                                        <th>
+                                            训练次数
+                                        </th>
+                                        <th>
+                                            使用价格
+                                        </th>
+                                        <th>开单时间</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="euqipemntList_info">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    window.onload = function () {
+
+        var userId = getCookie('userId');
+        var userName = getCookie('userName');
+        console.log(userId + " " + userName);
+        //alert(userName);
+        document.getElementById("user-name").innerHTML = userName;
+        $("#user_id").val(userId);
+    };
+
+    //寻找诊断单号
+    function findPaymentByDiagnosisId(diagnosisId) {
+        console.log(diagnosisId);
+        if (diagnosisId == null ||diagnosisId == "")
+            return;
+
+        $.ajax({
+            type:"get",
+            url:"/findPayment",
+            dataType:"json",
+            data:{"diagnosisId":diagnosisId},
+            success:function (map) {
+                //alert("success+"+map.diagnosis.diagnosisId);
+                 $("#euqipemntList_info").html("");
+                   $("#drugList_info").html("");
+                   if (map.paymentMsg != null){
+                       alert(map.paymentMsg);
+                       return;
+                   }else if(map.msg != null){
+                       alert(map.msg);
+                       return;
+                   }
+                  // console.log(map.paymentlist+map.euqipmentlists+map.druglists);
+                   var equipmentlistTbody = "";
+                   var druglistTbody = "";
+                   var sumPrice = 0;
+                   var maxEquipmentUseTimes = 0;
+                   //判断是否存在康复器材清单，有则显示，无则跳过
+                   if (map.euqipmentlists != null) {
+                       var equipmentlists = map.euqipmentlists;
+                       $.each(equipmentlists ,function (i,equipment) {
+                           sumPrice += equipment.usePrice;
+                           var equipmentListDate = timestampToTime(equipment.equipmentListDate);
+                           if (equipment.useTimes > maxEquipmentUseTimes)
+                               maxEquipmentUseTimes = equipment.useTimes;
+                           equipmentlistTbody +=
+                               '<tr><td>'+ equipment.recoverequipment.rm_id +'</td><td>'+ equipment.recoverequipment.rm_name
+                               +'</td><td>'+ equipment.useTimes
+                                +'次</td><td>'+equipment.usePrice +'元</td><td> '+ equipmentListDate+'</td></tr>';
+                   });
+                   }
+                   //同上
+                   if (map.druglists != null){
+                       var druglists = map.druglists;
+                       $.each(druglists,function (i,druglist) {
+                           sumPrice += druglist.drugPrice;
+                           var drugListDate = timestampToTime(druglist.drugListDate);
+                           druglistTbody +='<tr><td>'+ druglist.drug.drugId +'</td><td>'+ druglist.drug.drugName
+                               +'</td><td>'+  druglist.drugDosage +'</td><td>'+ druglist.drugPrice
+                               +'元</td><td>'+ drugListDate +'</td></tr>';
+                       });
+
+                   }
+                       $("#totalTreatTimes").val(maxEquipmentUseTimes);
+
+                var diagnosis = map.diagnosis;
+                //设置表单信息
+                $("#diagnosisId").val(diagnosis.diagnosisId);
+                $("#patientId").val(diagnosis.patient.patientId);
+                $("#patientName").val(diagnosis.patient.patientName);
+                $("#doctorId").val(diagnosis.doctor.userId);
+                $("#doctorName").val(diagnosis.doctor.userName);
+                $("#sumPrice").val(sumPrice);
+                $("#payStatus").find("option[value='"+1+"']").attr("selected","selected");
+                   $("#euqipemntList_info").append(equipmentlistTbody);
+                   $("#drugList_info").append(druglistTbody);
+               },
+               error:function () {
+                   alert("找不到该诊断信息表，请检查输入是否正确");
+
+            }
+        })
+
+    }
+
+    function resetPayment() {
+        $("#payment_list")[0].reset();
+        $("#euqipemntList_info").html("");
+        $("#drugList_info").html("");
+        $("#payStatus").find("option[value='']").attr("selected","selected");
+        $("#searchDiagnosisId").val("");
+    }
+
+    function setPayment(form) {
+
+        var diagnosisId = $("#diagnosisId").val();
+        var payStatus = $("#payStatus").val();
+        if (diagnosisId == ""|| diagnosisId == null) {
+            alert("你还没选择诊断表单，无法提交");
+            return false;
+        }
+        else if (payStatus != 2) {
+            alert("该医疗单还没设置为已付款，无法提交");
+            return false;
+        }
+        $.ajax({
+            type:"post",
+            url:"/addPayment",
+            data:form.serialize(),
+            success:function (data) {
+                alert(data);
+                window.location.reload();
+            },
+            error:function () {
+                alert("提交失败");
+            }
+        })
+    }
+</script>
+</html>

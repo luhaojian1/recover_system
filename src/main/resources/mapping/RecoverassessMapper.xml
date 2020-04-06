@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.RecoverassessMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Recoverassess">
+    <result column="reAssessId" jdbcType="INTEGER" property="reAssessId" />
+    <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="patientId" jdbcType="INTEGER" property="patientId" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="assessmentTimes" jdbcType="INTEGER" property="assessmentTimes" />
+    <result column="recoverSituation" jdbcType="VARCHAR" property="recoverSituation" />
+    <result column="recoverAssessment" jdbcType="VARCHAR" property="recoverAssessment" />
+    <result column="recoverRemarks" jdbcType="VARCHAR" property="recoverRemarks" />
+    <result column="assessTime" jdbcType="TIMESTAMP" property="assessTime" />
+    <result column="recoverConditions" jdbcType="INTEGER" property="recoverConditions" />
+    <association property="doctor" column="userId"  javaType="com.mrms.recoversystem.model.Medicalpersonal">
+      <id column="userId" jdbcType="INTEGER" property="userId" />
+      <result column="officeId" jdbcType="VARCHAR" property="officeId" />
+      <result column="userName" jdbcType="VARCHAR" property="userName" />
+    </association>
+    <association property="patient" column="patientId" javaType="com.mrms.recoversystem.model.Patient">
+      <result column="patientId" jdbcType="INTEGER" property="patientId" />
+      <result column="patientName" jdbcType="VARCHAR" property="patientName" />
+    </association>
+  </resultMap>
+
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Recoverassess">
+    insert into recoverassess
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="reAssessId != null">
+        reAssessId,
+      </if>
+      <if test="diagnosisId != null">
+        diagnosisId,
+      </if>
+      <if test="patientId != null">
+        patientId,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="assessmentTimes != null">
+        assessmentTimes,
+      </if>
+      <if test="recoverSituation != null">
+        recoverSituation,
+      </if>
+      <if test="recoverAssessment != null">
+        recoverAssessment,
+      </if>
+      <if test="recoverRemarks != null">
+        recoverRemarks,
+      </if>
+      <if test="assessTime != null">
+        assessTime,
+      </if>
+      <if test="recoverConditions != null">
+        recoverConditions,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="reAssessId != null">
+        #{reAssessId,jdbcType=INTEGER},
+      </if>
+      <if test="diagnosisId != null">
+        #{diagnosisId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null">
+        #{patientId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="assessmentTimes != null">
+        #{assessmentTimes,jdbcType=INTEGER},
+      </if>
+      <if test="recoverSituation != null">
+        #{recoverSituation,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverAssessment != null">
+        #{recoverAssessment,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverRemarks != null">
+        #{recoverRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="assessTime != null">
+        #{assessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recoverConditions != null">
+        #{recoverConditions},
+      </if>
+    </trim>
+  </insert>
+  <select id="select" parameterType="com.mrms.recoversystem.model.Recoverassess" resultMap="BaseResultMap">
+    select ra.reAssessId,ra.diagnosisId,mp.userId,mp.userName,p.patientId,p.patientName
+    from recoverassess ra, medicalpersonal mp , patient p
+    <where>
+      ra.userId = mp.userId and ra.patientId = p.patientId
+      <if test="reAssessId != null">
+       and reAssessId=#{reAssessId}
+      </if>
+      <if test="diagnosisId != null">
+        and diagnosisId=#{diagnosisId}
+      </if>
+      <if test="patientId != null">
+        and  ra.patientId=#{patientId}
+      </if>
+      <if test="userId != null">
+        and  ra.userId=#{userId}
+      </if>
+    </where>
+    order by ra.diagnosisId
+  </select>
+  <select id="selectSingleRecoverAssess" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ra.*,mp.userId,mp.userName,p.patientId,p.patientName
+    from recoverassess ra, medicalpersonal mp , patient p
+    where  reAssessId=#{reAssessId} and  ra.userId = mp.userId and ra.patientId = p.patientId
+
+  </select>
+  <update id="update" parameterType="com.mrms.recoversystem.model.Recoverassess">
+    update recoverassessment
+    <set>
+      <if test="diagnosisId != null">
+        diagnosisId=#{diagnosisId},
+      </if>
+      <if test="patientId != null">
+        patientId=#{patientId},
+      </if>
+      <if test="userId != null">
+        userId=#{userId},
+      </if>
+      <if test="assessmentTimes != null">
+        assessmentTimes = #{assessmentTimes},
+      </if>
+      <if test="recoverSituation != null">
+        recoverSituation=#{recoverSituation},
+      </if>
+      <if test="recoverAssessment != null">
+        recoverAssessment=#{recoverAssessment},
+      </if>
+      <if test="recoverRemarks != null">
+        recoverRemarks=#{recoverRemarks},
+      </if>
+      <if test="assessTime != null">
+        assessTime=#{assessTime},
+      </if>
+      <if test="recoverConditions != null">
+        recoverConditions = #{recoverConditions}
+      </if>
+      where reAssessId=#{reAssessId}
+    </set>
+  </update>
+  <delete id="delete" parameterType="java.lang.String">
+    delete
+    from recoverassessment
+    where reAssessId=#{reAssessId}
+  </delete>
+</mapper>

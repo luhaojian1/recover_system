@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.EquipmentlistMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Equipmentlist">
+    <result column="equipmentListId" jdbcType="VARCHAR" property="equipmentListId" />
+    <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="equipmentListDate" jdbcType="TIMESTAMP" property="equipmentListDate" />
+    <result column="useTimes" jdbcType="INTEGER" property="useTimes" />
+    <result column="usePrice" jdbcType="DOUBLE" property="usePrice" />
+    <result column="rm_id" jdbcType="VARCHAR" property="rm_id" />
+  </resultMap>
+
+  <resultMap id="queryResultMap" type="com.mrms.recoversystem.model.Equipmentlist">
+    <result column="equipmentListId" jdbcType="VARCHAR" property="equipmentListId" />
+    <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="equipmentListDate" jdbcType="TIMESTAMP" property="equipmentListDate" />
+    <result column="useTimes" jdbcType="INTEGER" property="useTimes" />
+    <result column="usePrice" jdbcType="DOUBLE" property="usePrice" />
+    <association property="recoverequipment" javaType="com.mrms.recoversystem.model.Recoverequipment" column="rm_id">
+      <id column="rm_id" jdbcType="VARCHAR" property="rm_id" />
+      <result column="rm_name" jdbcType="VARCHAR" property="rm_name" />
+      <result column="officeId" jdbcType="VARCHAR" property="officeId"/>
+      <result column="rm_number" jdbcType="INTEGER" property="rm_number" />
+      <result column="rm_specifications" jdbcType="VARCHAR" property="rm_specifications" />
+      <result column="rm_classification" jdbcType="VARCHAR" property="rm_classification" />
+      <result column="rm_function" jdbcType="VARCHAR" property="rm_function" />
+      <result column="hourUnitPrice" jdbcType="DOUBLE" property="hourUnitPrice" />
+    </association>
+  </resultMap>
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Equipmentlist">
+    insert into equipmentlist
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="equipmentListId != null">
+        equipmentListId,
+      </if>
+      <if test="diagnosisId != null">
+        diagnosisId,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="equipmentListDate != null">
+        equipmentListDate,
+      </if>
+      <if test="useTimes != null">
+        useTimes,
+      </if>
+      <if test="usePrice != null">
+        usePrice,
+      </if>
+      <if test="rm_id != null">
+        rm_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="equipmentListId != null">
+        #{equipmentListId,jdbcType=VARCHAR},
+      </if>
+      <if test="diagnosisId != null">
+        #{diagnosisId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="equipmentListDate != null">
+        #{equipmentListDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useTimes != null">
+        #{useTimes,jdbcType=INTEGER},
+      </if>
+      <if test="usePrice != null">
+        #{usePrice,jdbcType=DOUBLE},
+      </if>
+      <if test="rm_id != null">
+        #{rm_id,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 返回值，list集合 -->
+  <select id="search" parameterType="java.lang.String" resultMap="queryResultMap">
+    select el.*,re.*
+    from equipmentlist el,recoverequipment re
+    where diagnosisId=#{diagnosisId} and el.rm_id = re.rm_id;
+  </select>
+
+  <select id="findSingleEquipmentlist" parameterType="com.mrms.recoversystem.model.Equipmentlist" resultMap="queryResultMap">
+    select *
+    from equipmentlist
+    <where>
+      <if test="equipmentListId != null">
+        equipmentListId = #{equipmentListId}
+      </if>
+      <if test="diagnosisId != null">
+       and diagnosisId ={diagnosisId}
+      </if>
+    </where>
+  </select>
+  <update id="update" parameterType="com.mrms.recoversystem.model.Equipmentlist">
+    update equipmentlist
+    <set>
+      <if test="diagnosisId != null">
+        diagnosisId=#{diagnosisId},
+      </if>
+      <if test="userId != null">
+        userId=#{userId},
+      </if>
+      <if test="equipmentListDate != null">
+        equipmentListDate=#{equipmentListDate},
+      </if>
+      <if test="useTimes != null">
+        useTimes=#{useTimes},
+      </if>
+      <if test="usePrice != null">
+        usePrice=#{usePrice},
+      </if>
+      <if test="rm_id != null">
+       rm_id=#{rm_id}
+      </if>
+    </set>
+    where equipmentListId=#{equipmentListId}
+  </update>
+
+  <delete id="delete" parameterType="com.mrms.recoversystem.model.Equipmentlist">
+    delete *
+    from equipmentlist
+    <where>
+      <if test="equipmentListId != null">
+        equipmentListId=#{equipmentListId}
+      </if>
+      <if test="diagnosisId != null">
+      and  diagnosisId=#{diagnosisId}
+      </if>
+      <if test="userId != null">
+      and  userId=#{userId}
+      </if>
+      <if test="startDate != null">
+      and  startDate=#{startDate}
+      </if>
+      <if test="useTimes != null">
+      and  useTimes=#{useTimes}
+      </if>
+      <if test="usePrice != null">
+      and  usePrice=#{usePrice}
+      </if>
+      <if test="rm_id != null">
+        rm_id=#{rm_id}
+      </if>
+    </where>
+  </delete>
+
+  <select id="getMaxEquipmentListId" resultType="java.lang.String">
+    select max(equipmentListId)
+    from equipmentlist
+    order by equipmentlistId;
+  </select>
+</mapper>

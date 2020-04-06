@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.DrugMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Drug">
+    <result column="drugId" jdbcType="VARCHAR" property="drugId" />
+    <result column="drugName" jdbcType="VARCHAR" property="drugName" />
+    <result column="drugProperties" jdbcType="VARCHAR" property="drugProperties" />
+    <result column="function" jdbcType="VARCHAR" property="function" />
+    <result column="dosage" jdbcType="VARCHAR" property="dosage" />
+    <result column="attention" jdbcType="VARCHAR" property="attention" />
+    <result column="specifications" jdbcType="VARCHAR" property="specifications" />
+    <result column="manufactureDate" jdbcType="DATE" property="manufactureDate" />
+    <result column="effectiveDate" jdbcType="DATE" property="effectiveDate" />
+    <result column="adress" jdbcType="VARCHAR" property="adress" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="unitPrice" jdbcType="DOUBLE" property="unitPrice" />
+  </resultMap>
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Drug">
+    insert into drug
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="drugId != null">
+        drugId,
+      </if>
+      <if test="drugName != null">
+        drugName,
+      </if>
+      <if test="drugProperties != null">
+        drugProperties,
+      </if>
+      <if test="function != null">
+        function,
+      </if>
+      <if test="dosage != null">
+        dosage,
+      </if>
+      <if test="attention != null">
+        attention,
+      </if>
+      <if test="specifications != null">
+        specifications,
+      </if>
+      <if test="manufactureDate != null">
+        manufactureDate,
+      </if>
+      <if test="effectiveDate != null">
+        effectiveDate,
+      </if>
+      <if test="adress != null">
+        adress,
+      </if>
+      <if test="stock != null">
+        stock,
+      </if>
+      <if test="unitPrice != null">
+        unitPrice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="drugId != null">
+        #{drugId,jdbcType=VARCHAR},
+      </if>
+      <if test="drugName != null">
+        #{drugName,jdbcType=VARCHAR},
+      </if>
+      <if test="drugProperties != null">
+        #{drugProperties,jdbcType=VARCHAR},
+      </if>
+      <if test="function != null">
+        #{function,jdbcType=VARCHAR},
+      </if>
+      <if test="dosage != null">
+        #{dosage,jdbcType=VARCHAR},
+      </if>
+      <if test="attention != null">
+        #{attention,jdbcType=VARCHAR},
+      </if>
+      <if test="specifications != null">
+        #{specifications,jdbcType=VARCHAR},
+      </if>
+      <if test="manufactureDate != null">
+        #{manufactureDate,jdbcType=DATE},
+      </if>
+      <if test="effectiveDate != null">
+        #{effectiveDate,jdbcType=DATE},
+      </if>
+      <if test="adress != null">
+        #{adress,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null">
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="unitPrice != null">
+        #{unitPrice,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+    <select id="selectList" parameterType="com.mrms.recoversystem.model.Drug" resultType="com.mrms.recoversystem.model.Drug">
+        select *
+        from drug
+        <where>
+            <if test="drugId != null">
+                drugId like #{drugId}
+            </if>
+            <if test="drugName != null">
+                and    drugName like #{drugName}
+            </if>
+        </where>
+    </select>
+  <select id="findDrugById" parameterType="java.lang.String" resultType="com.mrms.recoversystem.model.Drug">
+      select *
+      from drug
+      where drugId = #{drugId};
+  </select>
+    <update id="updateSelective" parameterType="com.mrms.recoversystem.model.Drug">
+      update drug
+      <set>
+          <if test="drugName != null">
+              drugName=#{drugName},
+          </if>
+          <if test="drugProperties != null">
+              drugProperties=#{drugProperties},
+          </if>
+          <if test="function != null">
+              function=#{function},
+          </if>
+          <if test="dosage != null">
+              dosage=#{dosage},
+          </if>
+          <if test="attention != null">
+              attention=#{attention},
+          </if>
+          <if test="specifications != null">
+              specifications=#{specifications},
+          </if>
+          <if test="manufactureDate != null">
+              manufactureDate=#{manufactureDate},
+          </if>
+          <if test="effectiveDate != null">
+              effectiveDate=#{effectiveDate},
+          </if>
+          <if test="adress != null">
+              adress=#{adress},
+          </if>
+          <if test="stock != null">
+              stock=#{stock},
+          </if>
+          <if test="unitPrice != null">
+              unitPrice=#{unitPrice}
+          </if>
+      </set>
+      where drugId = #{drugId}
+  </update>
+  <delete id="delete" parameterType="java.lang.String" >
+      delete
+      from drug
+      where drugId = #{drugId}
+  </delete>
+</mapper>

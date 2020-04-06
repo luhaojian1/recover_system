@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>康复评估管理</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/base-method.js"></script>
+</head>
+<body style="margin: 0px;">
+<!-- 导航栏 -->
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a  data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+            <a id="home_page" href="../html/MRMS_Doctor.html" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li >
+                        <a href="../html/MRMS_Doctor.html">诊断</a>
+                    </li>
+                    <li>
+                        <a href="../html/MRMS_Doctor_FollowUpPlan_Record.html">随访记录</a>
+                    </li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">康复管理<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li class="active">
+                                <a href="../html/MRMS_Doctor_Recover_Assessment.html">康复评定</a>
+                            </li>
+                            <li>
+                                <a href="../html/MRMS_Doctor_Assess_Patient_Recovery.html">康复评定记录</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+
+                    <li class="divider-vertical">
+                        <div class="btn-group">
+                            <button id="user-name" class="btn" ></button>
+                            <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                            <ul class="dropdown-menu psersonal_list" >
+                                <li data-id="personal_set">
+                                    <a href="../html/MRMS_Personal_Center.html" onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                                </li>
+                                <li >
+                                    <a href="/signOut">退出</a>
+                                </li>
+                                <li class="divider"></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+
+        <div class="span12">
+            <div class="row-fluid">
+
+                <div class="row-fluid">
+                    <div class="span12">
+
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <div style="border-color:#000;" class="row-fluid ">
+                                    <br>
+                                    <div id="diagnosis_drugList_equipmentList" class="span12">
+                                        <div class="row-fluid">
+
+                                            <div class="span6">
+                                                <input name="select" value="1" type="radio" checked="checked"/>诊断记录ID
+                                                <input name="select" value="2" type="radio" />患者ID<br>
+                                                <input id="diagnosis" class="input-medium search-query" type="text" />
+                                                <button class="btn "  onclick="findDiagnosis($('input:radio[name=select]:checked').val(),$('#diagnosis').val())">查找</button><br />
+
+                                            </div>
+                                            <div class="span6">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="span12">
+                                    <form id = "recover_assessment">
+                                        <fieldset>
+                                            <legend>康复评定记录表</legend>
+                                            <table class="table table-condensed">
+                                                <tr>
+                                                    <td><label id="pat_name">患者姓名:</label></td>
+                                                    <td><label  id="assessDoctor"  >评估医生:</label></td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td><label id="assessTimes">治疗次数:</label></td>
+                                                    <td><label  id="assessTime" >评估日期:</label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>治疗效果</td>
+                                                    <td><input  name="recoverConditions" type="radio" value="1">差
+                                                        <input  name="recoverConditions" type="radio" value="2">一般
+                                                        <input  name="recoverConditions" type="radio" value="3">较好
+                                                        <input  name="recoverConditions" type="radio" value="4">很好</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><input id="patientId" name="patientId" type="hidden"></td>
+                                                    <td><input  id="userId" name="userId" type="hidden"></td>
+                                                    <td><input  id="diagnosisId" name="diagnosisId" type="hidden"></td>
+                                                    <input type="hidden" id="assessmentTimes" name="assessmentTimes" style="width: 70px;">
+                                                </tr>
+                                            </table>
+                                            <label>训练目标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <textarea id="recoverRemarks" name="recoverRemarks"
+                                                          type="textarea"  style="width: 500px;height: 50px;" ></textarea>
+                                            </label><br>
+                                            <label>训练进展情况
+                                                <textarea id="training_progress" name="recoverSituation"
+                                                          type="textarea"  style="width: 500px;height: 50px;" ></textarea></label><br>
+                                            <label>康复评估&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <textarea id="recoverAssessment" name="recoverAssessment"
+                                                          type="textarea"  style="width: 500px;height: 50px;" ></textarea>
+                                            </label>
+                                            <input  id="assess_time" name="assessTime" type="hidden">
+                                        </fieldset>
+                                    </form>
+                                    <div>
+                                        <button class="btn btn-primary"  onclick="submitRecoverAssess($('#recover_assessment'))">提交</button>
+                                        <button class="btn btn-danger"   onclick="resetAssessment()">重置</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6">
+                                <div class="span12">
+                                    <h3>诊断表</h3>
+                                    <form id = "diagnosis_record">
+                                        <table class="table table-condensed">
+                                            <tr>
+                                                <td>
+                                                    患者姓名:<a id="patient_name" style="width: 70px;height: 20px;" href="#patient_info" role="button" class="btn" data-toggle="modal" onclick="setPatientInfo($('#patientId').val())"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    病情分类 :<lable id="sickClassification" ></lable>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    病情等级 :<lable id="sickLevel" ></lable>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    诊断医生 :<lable id="doctorName"></lable>
+
+                                                </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td><lable>病人主诉</lable>
+                                                    <textarea id="chiefComplaint" name="chiefComplaint"
+                                                              type="textarea"  style="width: 500px;height: 50px;" readonly="readonly"></textarea></td>
+                                            </tr>
+                                            <tr>
+                                                <td><lable>诊断结论</lable>
+                                                    <textarea id="diagnosisResult" name="diagnosisResult"
+                                                              type="textarea"  style="width: 500px;height: 50px;" readonly="readonly"></textarea></td>
+                                            </tr>
+                                            <tr>
+                                                <td><lable>康复计划</lable>
+                                                    <textarea id="recoverPlan" name="recoverPlan"
+                                                              type="textarea"  style="width: 500px;height: 100px;" readonly></textarea></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input id="patient" name="patientId" type="hidden"></td>
+                                                <td><input id="doctor" name="userId" type="hidden"></td>
+                                            </tr>
+                                        </table>
+
+                                    </form>
+
+                                </div>
+                                <div class="span12">
+                                    <table class="table  table-condensed table-responsive">
+                                        <thead class="table-bordered">
+                                        <tr>
+                                            <th>
+                                                药物编号
+                                            </th>
+                                            <th>
+                                                药物名称
+                                            </th>
+                                            <th>
+                                                用药天数
+                                            </th>
+                                            <th>开单时间</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="drugList_info">
+
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table  table-condensed table-responsive">
+                                        <thead class="table-bordered">
+                                        <tr>
+                                            <th>
+                                                器材编号
+                                            </th>
+                                            <th>
+                                                器材名称
+                                            </th>
+                                            <th>
+                                                训练次数
+                                            </th>
+                                            <th>开单时间</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="euqipemntList_info">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- 患者信息列表 -->
+            <div id="patient_info" style="width: 700px;" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 >
+                        患者治疗信息
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>患者编号</td><td><label id="patient_id"></label></td>
+
+                        </tr>
+                        <tr>
+                            <td>姓名</td><td><label id="patientName"></label></td>
+                        </tr>
+                        <tr>
+                            <td>性别</td><td><label id="sex" ></label></td>
+
+                        </tr>
+                        <tr>
+                            <td>年龄</td><td><lable id="age"></lable></td>
+                        </tr>
+                        <tr>
+                            <td><label>民族</label></td><td><label id="nation"  ></label></td>
+
+                        </tr>
+                        <tr>
+                            <td>籍贯</td><td><lable id="nativePlace"></lable></td>
+                        </tr>
+
+                        <tr>
+                            <td><label>家庭地址</label></td><td><label id="homeAdress" ></label></td>
+                        </tr>
+                        <tr>
+                            <td><label >身份证号码</label></td><td><label id="carId"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>联系方式</label></td><td><label id="phoneNumber"></label></td></tr>
+                        <tr>
+                            <td><label>出生日期</label></td><td><lable id="mpBirthday" ></lable></td>
+                        </tr>
+                        <tr>
+                            <td><label>职业</label></td><td><label id="occupation" ></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>单位</label></td><td><label id="workPlace" ></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>身高</label></td><td><label id="height"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>体重</label></td><td><label id="weight" ></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>血型</label></td><td> <label id="bloodType"></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>是否存在家族病史</label></td><td><label id="famSickHistroy" ></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>家族病史说明</label></td><td><lable  id="sickHistrionicInstruction"></lable></td>
+                        </tr>
+                        <tr>
+                            <td><label>是否药物过敏</label></td><td><lable id="drugAllergy" ></lable></td>
+                        </tr>
+                        <tr>
+                            <td><label>药物过敏说明</label></td><td><lable  id="drugAllergyIntroduction"  ></lable></td>
+                        </tr>
+                    </table>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true" >关闭</button>
+                </div>
+            </div>
+
+            <!-- 待治疗列表 -->
+            <div id="payment_info" style="width: auto;" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">
+                        患者治疗信息
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <th>诊断记录编号</th>
+                        <th>患者ID</th>
+                        <th>患者姓名</th>
+                        <th>诊断医生</th>
+                        <th>治疗次数</th>
+                        <th>是否完成治疗</th>
+                        </thead>
+                        <tbody id="paymentlists_info"></tbody>
+                    </table>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true" >关闭</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var userId = getCookie('userId');
+        var userName = getCookie('userName');
+        console.log(userId+" "+userName);
+        $("#user-name").html(userName);
+        $("#assessDoctor").text("评估医生:"+userName);
+        $("#userId").val(userId);
+        $("#assessTime").text("评估日期:"+timestampToDate(new Date()));
+        $("#assess_time").val(timestampToDate(new Date()));
+    });
+
+    //提交康复评定表
+    function submitRecoverAssess(form) {
+        console.log(form[0]);
+        var validateResult = assessSubmitValidate();
+        if (validateResult != "") {
+            alert(validateResult);
+            return ;
+        }
+
+        $.ajax({
+            type:"post",
+            url:"/addRecoverAssess",
+            data:form.serialize(),
+            dataType:"json",
+            success:function (result) {
+                console.log(result);
+                if (result == true){
+                    alert("添加评定成功");
+                    window.location.reload();
+                }
+
+                else
+                    alert("添加失败,请检查舒服是否输入完整");
+
+            }
+        });
+    }
+
+    //通过诊断表编号或患者编号寻找已缴费的治疗信息表
+   function findDiagnosis(selectId,info){
+
+        console.log(selectId + " "+info);
+        if (info == null ||info == "") {
+            alert("请输入查找信息");
+            return ;
+        }
+        $.ajax({
+            type:"get",
+            url:"/findPaymentedDiagnosis",
+            data:{
+                selectId:selectId,
+                info:info
+            },
+            dataType:"json",
+            success:function (map) {
+                $("#paymentlists_info").html("");
+                console.log(map.paymentlists);
+                if (map.paymentlists == null){
+                    alert("找不到该诊断号的相关信息，请检查输入是否正确\n" +
+                        "提示：\n" +
+                        "    1.输入不正确\n" +
+                        "    2.患者未缴费，无法查询到有效信息"+
+                        "    3.该诊断单所需的康复治疗已完成");
+                    return ;
+                }
+                var tbody = "";
+                $.each(map.paymentlists ,function (i,paymentlist){
+                    tbody+= '<tr><td>'+ paymentlist.diagnosis.diagnosisId +'</td><td>'+ paymentlist.patient.patientId+'</td><td>'+ paymentlist.patient.patientName
+                        +'</td><td>'+ paymentlist.doctor.userName +'</td><td>'+paymentlist.treatTimes+'/'+paymentlist.totalTreatTimes
+                        +'</td><td>'+(paymentlist.treatFinished==true?"是":"否")
+                        +'</td><td> <button  class=" btn btn-primary" data-dismiss="modal" '  +
+                        'onclick=findPaymentByDiagnosisId('+"'"+ paymentlist.diagnosis.diagnosisId +"',"+paymentlist.treatTimes+","+paymentlist.totalTreatTimes+')>确定</button></td></tr>';
+                });
+                $("#paymentlists_info").append(tbody);
+                $("#payment_info").modal();
+            }
+        })
+   }
+
+   //设置病人信息
+   function setPatientInfo(patientId) {
+        if (patientId == null)
+            return ;
+        $.ajax({
+            type:"get",
+            url:"/searchAppointedPatient",
+            data:{patientId:patientId},
+            dataType:"json",
+            success:function (patient) {
+                $("#patient_id").text(patient.patientId);
+                $("#patientId").text(patient.patientId);
+                $("#patientName").text(patient.patientName);
+                $("#age").text(patient.age+"岁");
+                $("#sex").text(patient.sex==true?"男":"女");
+                $("#nation").text(patient.nation);
+                $("#nativePlace").text(patient.nativePlace);
+                $("#carId").text(patient.carId);
+                $("#homeAdress").text(patient.homeAdress);
+                $("#phoneNumber").text(patient.phoneNumber);
+                var birthday = timestampToDate(patient.mpBirthday);//生日需要转换
+                $("#mpBirthday").text(birthday);
+                $("#occupation").text(patient.occupation);
+                $("#workPlace").text(patient.workPlace);
+                $("#height").text(patient.height+" cm");
+                $("#weight").text(patient.weight+" kg");
+                $("#bloodType").text(patient.bloodType+" 型");
+                $("#famSickHistroy").text(patient.famSickHistroy==true?"是":"否");
+                $("#sickHistrionicInstruction").text(patient.famSickHistroy==true?patient.sickHistrionicInstruction:"");
+                $("#drugAllergy").text(patient.drugAllergy==true?"是":"否");
+                $("#drugAllergyIntroduction").text(patient.drugAllergy==true?patient.drugAllergyIntroduction:"");
+            }
+        })
+   }
+
+   //查找并设置诊断记录信息
+    function findPaymentByDiagnosisId(diagnosisId,treatTimes,totalTreatTimes) {
+        console.log(diagnosisId);
+        if (diagnosisId == null ||diagnosisId == "")
+            return;
+
+        $.ajax({
+            type:"get",
+            url:"/findPayment",
+            dataType:"json",
+            data:{"diagnosisId":diagnosisId},
+            success:function (map) {
+                //alert("success+"+map.diagnosis.diagnosisId);
+                $("#euqipemntList_info").html("");
+                $("#drugList_info").html("");
+                if (map.msg != null){
+                    alert(map.msg);
+                    return;
+                }
+                // console.log(map.paymentlist+map.euqipmentlists+map.druglists);
+                var equipmentlistTbody = "";
+                var druglistTbody = "";
+                var sumPrice = 0;
+                //判断是否存在康复器材清单，有则显示，无则跳过
+                if (map.euqipmentlists != null) {
+                    var equipmentlists = map.euqipmentlists;
+                    $.each(equipmentlists ,function (i,equipment) {
+                        sumPrice += equipment.usePrice;
+                        var equipmentListDate = timestampToTime(equipment.equipmentListDate);
+                        equipmentlistTbody +=
+                            '<tr><td>'+ equipment.recoverequipment.rm_id +'</td><td>'+ equipment.recoverequipment.rm_name
+                            +'</td><td>'+ equipment.useTimes
+                            +'次</td><td> '+ equipmentListDate+'</td></tr>';
+                    });
+                }
+                //同上
+                if (map.druglists != null){
+                    var druglists = map.druglists;
+                    $.each(druglists,function (i,druglist) {
+                        sumPrice += druglist.drugPrice;
+                        var drugListDate = timestampToTime(druglist.drugListDate);
+                        druglistTbody +='<tr><td>'+ druglist.drug.drugId +'</td><td>'+ druglist.drug.drugName
+                            +'</td><td>'+  druglist.drugDosage +'</td><td>'+ drugListDate +'</td></tr>';
+                    });
+
+                }
+
+                $("#assessmentTimes").val(treatTimes+1);
+                $("#assessTimes").text("治疗次数："+(treatTimes+1)+"/"+totalTreatTimes);
+                var diagnosis = map.diagnosis;
+                //设置表单信息
+                $("#diagnosisId").val(diagnosis.diagnosisId);
+                $("#patientId").val(diagnosis.patient.patientId);
+                $("#patient").val(diagnosis.patient.patientId);
+                $("#patient_name").text(diagnosis.patient.patientName);
+                $("#pat_name").text("患者姓名："+diagnosis.patient.patientName);
+                $("#doctorName").text(diagnosis.doctor.userName);
+                $("#sickClassification").text(diagnosis.sickClassification);
+                $("#sickLevel").text(diagnosis.sickLevel);
+                $("#chiefComplaint").text(diagnosis.chiefComplaint);    //病因
+                $("#diagnosisResult").text(diagnosis.diagnosisResult); //诊断结果
+                $("#recoverPlan").text(diagnosis.recoverPlan);             //康复计划
+                $("#euqipemntList_info").append(equipmentlistTbody);
+                $("#drugList_info").append(druglistTbody);
+            },
+            error:function () {
+                alert("找不到该诊断信息表，请检查输入是否正确");
+
+            }
+        })
+
+    }
+
+    //表单提交验证
+    function assessSubmitValidate() {
+        var recoverRemarks = $("#recoverRemarks").val();
+        var recoverAssessment = $("#recoverAssessment").val();
+        var trainigProgress = $("#training_progress").val();
+        var diagnosisId = $("#diagnosisId").val();
+        var msg = "";
+        if ( diagnosisId == "" || diagnosisId == null){
+            msg += "你还没有添加治疗信息\n";
+        }
+        if(recoverRemarks == ""||recoverRemarks ==null)
+            msg += "训练目标不能为空\n";
+        if (trainigProgress == "" || trainigProgress == null)
+            msg += "康复进展情况不能为空\n";
+        if (recoverAssessment == "" || recoverAssessment == null)
+            msg += "康复评估不能为空\n";
+
+        return msg;
+    }
+
+    function resetAssessment() {
+        $("#payment_list")[0].reset();
+        $("#recover_assessment")[0].reset();
+        $("#euqipemntList_info").html("");
+        $("#drugList_info").html("");
+        $("#searchDiagnosisId").val("");
+    }
+    //日期格式化  YY-MM-DD
+    function timestampToDate(timestamp) {
+        var date = new Date(timestamp );//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        var D = (date.getDate()+1 < 10 ? '0'+(date.getDate()+1) : date.getDate()+1) ;
+        return Y+M+D;
+    }
+</script>
+
+</html>

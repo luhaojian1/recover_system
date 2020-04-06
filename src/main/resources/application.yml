@@ -1,0 +1,34 @@
+## mybatis configuration
+mybatis:
+  mapper-locations: classpath*:mapping/*.xml
+  type-aliases-package: com.mrms.recoversystem.model
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mrms?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+  mvc:
+    static-path-pattern: /**
+    date-format: yyyy-MM-dd
+
+logging.file: logs/application.log
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+      hibernate: ERROR
+
+
+server:
+  port: 8082
+
+
+
+
+
+

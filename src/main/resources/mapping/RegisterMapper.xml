@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrms.recoversystem.mapper.RegisterMapper">
+  <resultMap id="BaseResultMap" type="com.mrms.recoversystem.model.Register">
+    <id column="registerId" jdbcType="VARCHAR" property="registerId" />
+    <result column="patientId" jdbcType="INTEGER" property="patientId" />
+    <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="patientName" jdbcType="VARCHAR" property="patientName" />
+    <result column="visStatus" jdbcType="INTEGER" property="visStatus" />
+    <result column="registrationCategory" jdbcType="INTEGER" property="registrationCategory" />
+    <result column="diagnosisPrice" jdbcType="INTEGER" property="diagnosisPrice" />
+    <result column="registerDate" jdbcType="TIMESTAMP" property="registerDate" />
+    <result column="tollCollector" jdbcType="INTEGER" property="tollCollector" />
+      <result column="diagnosisNo" jdbcType="INTEGER" property="diagnosisNo" />
+  </resultMap>
+
+    <resultMap id="queryForListMap" type="com.mrms.recoversystem.model.Register">
+        <result column="registerId" jdbcType="VARCHAR" property="registerId" />
+        <result column="diagnosisId" jdbcType="VARCHAR" property="diagnosisId" />
+        <result column="patientId" jdbcType="INTEGER" property="patientId" />
+        <result column="patientName" jdbcType="VARCHAR" property="patientName" />
+        <result column="visStatus" jdbcType="INTEGER" property="visStatus" />
+        <result column="registrationCategory" jdbcType="INTEGER" property="registrationCategory" />
+        <result column="diagnosisPrice" jdbcType="INTEGER" property="diagnosisPrice" />
+        <result column="registerDate" jdbcType="TIMESTAMP" property="registerDate" />
+        <result column="diagnosisNo" jdbcType="INTEGER" property="diagnosisNo" />
+        <result column="tollCollector" jdbcType="INTEGER" property="tollCollector" />
+        <association property="doctor" column="userId"  javaType="com.mrms.recoversystem.model.Medicalpersonal">
+            <id column="userId" jdbcType="INTEGER" property="userId" />
+            <result column="officeId" jdbcType="VARCHAR" property="officeId" />
+            <result column="userName" jdbcType="VARCHAR" property="userName" />
+            <result column="passWord" jdbcType="VARCHAR" property="passWord" />
+            <result column="jobPosition" jdbcType="VARCHAR" property="jobPosition" />
+            <result column="power" jdbcType="INTEGER" property="power" />
+            <result column="sex" jdbcType="BIT" property="sex" />
+            <result column="age" jdbcType="INTEGER" property="age" />
+            <result column="mpBirthday" jdbcType="DATE" property="mpBirthday" />
+            <result column="subject" jdbcType="VARCHAR" property="subject" />
+            <result column="doctorIntroduction" jdbcType="VARCHAR" property="doctorIntroduction" />
+        </association>
+        <association property="patient" column="patientId" javaType="com.mrms.recoversystem.model.Patient">
+          <result column="patientId" jdbcType="INTEGER" property="patientId" />
+          <result column="patientName" jdbcType="VARCHAR" property="patientName" />
+          <result column="age" jdbcType="INTEGER" property="age" />
+          <result column="nation" jdbcType="VARCHAR" property="nation" />
+          <result column="nativePlace" jdbcType="VARCHAR" property="nativePlace" />
+          <result column="carId" jdbcType="VARCHAR" property="carId" />
+          <result column="homeAdress" jdbcType="VARCHAR" property="homeAdress" />
+          <result column="phoneNumber" jdbcType="VARCHAR" property="phoneNumber" />
+          <result column="mpBirthday" jdbcType="DATE" property="mpBirthday" />
+          <result column="sex" jdbcType="BIT" property="sex" />
+          <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+          <result column="workPlace" jdbcType="VARCHAR" property="workPlace" />
+          <result column="height" jdbcType="DOUBLE" property="height" />
+          <result column="weight" jdbcType="DOUBLE" property="weight" />
+          <result column="bloodType" jdbcType="VARCHAR" property="bloodType" />
+          <result column="famSickHistroy" jdbcType="BIT" property="famSickHistroy" />
+          <result column="sickHistrionicInstruction" jdbcType="VARCHAR" property="sickHistrionicInstruction" />
+          <result column="drugAllergy" jdbcType="BIT" property="drugAllergy" />
+          <result column="drugAllergyIntroduction" jdbcType="VARCHAR" property="drugAllergyIntroduction" />
+        </association>
+    </resultMap>
+
+  <sql id="activeWhere">
+    <where>
+      <if test="registerId != null">
+        r.registerId=#{registerId}
+      </if>
+      <if test="patientId != null">
+        and  r.patientId=#{registerId}
+      </if>
+      <if test="diagnosisId != null">
+        and r.diagnosisId=#{diagnosisId}
+      </if>
+      <if test="userId != null">
+        and  r.userId=#{userId}
+      </if>
+      <if test="patientName != null">
+        and  r.patientName=#{patientName}
+      </if>
+      <if test="visStatus != null">
+        and  r.visStatus=#{visStatus}
+      </if>
+      <if test="registrationCategory != null">
+        and  r.registrationCategory=#{registrationCategory}
+      </if>
+      <if test="registerDate != null">
+        and  r.registerDate=#{registerDate}
+      </if>
+      <if test="tollCollector != null">
+        and  r.tollCollector=#{tollCollector}
+      </if>
+        <if test="diagnosisNo != null">
+         and   r.diagnosisNo=#{diagnosisNo}
+        </if>
+    </where>
+  </sql>
+  <insert id="insertSelective" parameterType="com.mrms.recoversystem.model.Register">
+    insert into register
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="registerId != null">
+        registerId,
+      </if>
+      <if test="patientId != null">
+        patientId,
+      </if>
+      <if test="diagnosisId != null">
+        diagnosisId,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="patientName != null">
+        patientName,
+      </if>
+      <if test="visStatus != null">
+        visStatus,
+      </if>
+      <if test="registrationCategory != null">
+        registrationCategory,
+      </if>
+      <if test="diagnosisPrice != null">
+        diagnosisPrice,
+      </if>
+      <if test="registerDate != null">
+        registerDate,
+      </if>
+      <if test="tollCollector != null">
+          tollCollector,
+      </if>
+        <if test="diagnosisNo != null">
+            diagnosisNo,
+        </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="registerId != null">
+        #{registerId,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null">
+        #{patientId,jdbcType=INTEGER},
+      </if>
+      <if test="diagnosisId != null">
+        #{diagnosisId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="patientName != null">
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="visStatus != null">
+        #{visStatus,jdbcType=INTEGER},
+      </if>
+      <if test="registrationCategory != null">
+        #{registrationCategory,jdbcType=INTEGER},
+      </if>
+      <if test="diagnosisPrice != null">
+        #{diagnosisPrice,jdbcType=INTEGER},
+      </if>
+      <if test="registerDate != null">
+        #{registerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tollCollector != null">
+         #{tollCollector,jdbcType=INTEGER},
+      </if>
+      <if test="diagnosisNo != null">
+            #{diagnosisNo},
+        </if>
+    </trim>
+  </insert>
+
+    <select id="searchRegisterWithDoctor" parameterType="java.lang.String" resultMap="queryForListMap">
+      select r.registerId, r.patientId, r.diagnosisId,
+            r.userId , r.patientName, r.visStatus,
+             r.registrationCategory, r.diagnosisPrice, r.registerDate,r.tollCollector,r.diagnosisNo,
+            mp.userName,mp.jobPosition,mp.officeId,
+            mp.passWord,mp.power,mp.sex,
+            mp.age,mp.mpBirthday,mp.subject,mp.doctorIntroduction,p.*
+      from register r  join medicalpersonal  mp on r.userId = mp.userId
+      join patient p on r.patientId = p.patientId
+      <include refid="activeWhere"/>
+      order by r.registerDate;
+  </select>
+  <select id="findRegistersTollCollector"  resultMap="queryForListMap">
+    select r.registerId, r.patientId,
+            r.userId, r.patientName, r.visStatus,
+             r.registrationCategory, r.diagnosisPrice, r.registerDate,r.tollCollector,r.diagnosisNo,
+            mp.userId,mp.userName,mp.officeId
+    from register r  , medicalpersonal  mp
+    <where>
+        visStatus !=4  and  r.userId = mp.userId and date(r.registerDate) = date(now())
+    </where>
+  </select>
+
+  <update id="update" parameterType="com.mrms.recoversystem.model.Register">
+    update register
+    <set>
+      <if test="patientId != null">
+        patientId=#{patientId},
+      </if>
+      <if test="diagnosisId != null">
+        diagnosisId=#{diagnosisId},
+      </if>
+      <if test="userId != null">
+        userId=#{userId},
+      </if>
+      <if test="patientName != null">
+        patientName=#{patientName},
+      </if>
+      <if test="visStatus != null">
+        visStatus=#{visStatus},
+      </if>
+      <if test="registrationCategory != null">
+        registrationCategory=#{registrationCategory},
+      </if>
+      <if test="diagnosisPrice != null">
+        diagnosisPrice=#{diagnosisPrice},
+      </if>
+      <if test="registerDate != null">
+        registerDate=#{registerDate},
+      </if>
+        <if test="tollCollector != null">
+            tollCollector=#{tollCollector},
+        </if>
+        <if test="diagnosisNo != null">
+            diagnosisNo=#{diagnosisNo}
+        </if>
+    </set>
+    where registerId=#{registerId}
+  </update>
+  <delete id="delete" parameterType="java.lang.String">
+    delete
+    from register
+    where registerId=#{registerId}
+  </delete>
+
+    <select id="getMaxRegisterId" resultType="java.lang.String">
+        select max(registerId)
+        from register;
+    </select>
+
+  <select id="selectRegisterByDoctorId" resultMap="queryForListMap" >
+    select r.registerId, r.patientId, r.diagnosisId,
+    r.userId , r.patientName, r.visStatus,
+    r.registrationCategory, r.diagnosisPrice, r.registerDate,r.tollCollector,r.diagnosisNo,
+    mp.userName,mp.jobPosition,mp.officeId,
+    mp.passWord,mp.power,mp.sex,
+    mp.age,mp.mpBirthday,mp.subject,mp.doctorIntroduction,p.*
+    from register r  join medicalpersonal  mp on r.userId = mp.userId
+    join patient p on r.patientId = p.patientId
+    where r.userId = #{param1} and r.visStatus =#{param2} and date(r.registerDate) = date(now())
+    order by r.diagnosisNo;
+  </select>
+
+    <select id="findRegisterById" resultType="com.mrms.recoversystem.model.Register">
+        select *
+        from register
+        where registerId = #{registerId};
+    </select>
+
+  <select id="getRegisterCountWithDoctor" resultType="java.lang.Integer">
+    select count(registerId)
+    from register
+    where userId = #{doctorId} and registerDate between #{startDate} and #{endDate};
+  </select>
+
+  <select id="getRegisterorderNumber" resultType="java.lang.Integer">
+    select count(registerId)
+    from register
+    where userId = #{userId} and date(registerDate) = date(now());
+  </select>
+</mapper>

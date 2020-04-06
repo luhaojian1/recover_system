@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>随访记录列表</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/base-method.js"></script>
+    <script src="../js/echarts.js"></script>
+</head>
+<body style="margin: 0px;">
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+            <a id="home_page" href="../html/MRMS_Doctor.html" class="brand">康复医疗管理系统</a>
+            <div class="nav-collapse collapse navbar-responsive-collapse">
+                <ul class="nav">
+                    <li><a href="../html/MRMS_Manager_Patient_List.html">患者信息管理</a></li>
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">用户管理<strong
+                                class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../html/MRMS_Manager_AddUser.html">创建新用户</a></li>
+                            <li><a href="../html/MRMS_Manager_UserList.html">用户列表</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">随访管理<strong
+                                class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../html/MRMS_Manager_FollowUpPlan.html">发布随访计划</a></li>
+                            <li><a href="../html/MRMS_Manager_FollowUpPlan_List.html">随访计划列表</a></li>
+                            <li ><a href="../html/MRMS_Manager_FollowUpPlan_Record_List.html">随访记录列表</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <ul class="nav pull-right">
+                    <div class="btn-group">
+                        <button id="user-name" class="btn"></button>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle"><span
+                                class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../html/MRMS_Personal_Center.html"
+                                   onclick="setPersonalHomePage($('#home_page').attr('href'))">个人设置</a>
+                            </li>
+                            <li>
+                                <a href="/signOut">退出</a>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="tabbable" id="tabs-456957">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab"
+                                          href="#panel-flupplan_record_list">随访记录列表</a></li>
+                    <li><a data-toggle="tab" href="#panel-flupplanrecord_echarts">随访记录报表</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" contenteditable="true" id="panel-flupplan_record_list">
+                        <div class="span12">
+                            <div class="row-fluid">
+
+                                <div class="span1"></div>
+                                <div class="span9">
+                                    <h3>随访记录列表</h3>
+                                    <div>
+                                        <br>
+                                        <input name="flupRecords" value="1" type="radio"
+                                               checked="checked"/>随访记录ID
+                                        <input name="flupRecords" value="2" type="radio"/>随访计划ID
+                                        <input name="flupRecords" value="3" type="radio"/>医生ID
+                                        <input name="flupRecords" value="4" type="radio"/>患者ID<br>
+                                        <input id="value" class="input-medium search-query"
+                                               type="text"/>
+                                        <button class="btn "
+                                                onclick="findFlupRecord($('input:radio[name=flupRecords]:checked').val(),$('#value').val(),1)">
+                                            查找
+                                        </button>
+                                        <button class="btn "
+                                                onclick="findFlupplanRecordList(1)">
+                                            重置
+                                        </button>
+                                        <br/>
+
+                                    </div>
+                                    <div>
+                                        <br>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                            <th>随访计划编号</th>
+                                            <th>随访记录编号</th>
+                                            <th>随访医生</th>
+                                            <th>随访病人</th>
+                                            <th>详细信息</th>
+                                            </thead>
+                                            <tbody id="flupplan_record_list">
+
+                                            </tbody>
+                                        </table>
+
+                                        <div class="pagination pagination-centered">
+                                            <ul id="flupplan_record_list_pagination">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="span2">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" contenteditable="true" id="panel-flupplanrecord_echarts">
+                        <div class="span12">
+                            <div class="row-fluid">
+
+                                <div class="span1"></div>
+                                <div class="span9">
+
+                                    <div>
+                                        <br>
+                                        <input name="flup_key" value="1" type="radio"
+                                               checked="checked"/>治疗效果
+                                        <input name="flup_key" value="2" type="radio"/>恢复情况
+                                        <input name="flup_key" value="3" type="radio"/>随访满意度
+                                        <input name="flup_key" value="4" type="radio"/>all<br>
+                                        <label>随访计划ID<input id="flup_id"
+                                                            class="input-medium search-query"
+                                                            type="text"/>
+                                            <button class="btn "
+                                                    onclick="buildEcharts($('input:radio[name=flup_key]:checked').val(),$('#flup_id').val())">
+                                                查找
+                                            </button>
+                                        </label>
+
+                                        <br/>
+
+                                    </div>
+                                    <div id="main_echarts" style="width: 600px;height:400px;">
+
+
+                                    </div>
+
+                                </div>
+                                <div class="span2">
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- 随访记录详细信息 -->
+    <div id="followUpPlanRecord_info" style="width: auto;" class="modal hide fade" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="followUpPlanRecordModal">
+                随访计划
+            </h3>
+        </div>
+        <div class="modal-body">
+            <table id="followupplan_info" class="table ">
+                <tbody>
+                <tr>
+                    <td>随访计划编号</td>
+                    <td><p id="flupplanId"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>医生编号</td>
+                    <td><p id="doctorId"></p></td>
+                </tr>
+                <tr>
+                    <td>医生姓名</td>
+                    <td><p id="doctorName"></p></td>
+                </tr>
+                <tr>
+                    <td>患者编号</td>
+                    <td><p id="patient"></p></td>
+                </tr>
+                <tr>
+                    <td>患者姓名</td>
+                    <td><p id="patient_name"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>随访方式</td>
+                    <td>
+                        <input name="followUpMode" type="radio" value="1">出院随访
+                        <input name="followUpMode" type="radio" value="2">电话随访
+                        <input name="followUpMode" type="radio" value="3">短信随访
+                    </td>
+                </tr>
+                <tr>
+                    <td>治疗效果</td>
+                    <td>
+                        <input name="treatEffect" type="radio" value="1">非常差
+                        <input name="treatEffect" type="radio" value="2">较差
+                        <input name="treatEffect" type="radio" value="3">一般
+                        <input name="rtreatEffect" type="radio" value="4">较好
+                        <input name="treatEffect" type="radio" value="5">很好
+                    </td>
+                </tr>
+                <tr>
+                    <td>恢复情况</td>
+                    <td>
+                        <input name="recoverConditions" type="radio" value="1">非常差
+                        <input name="recoverConditions" type="radio" value="2">较差
+                        <input name="recoverConditions" type="radio" value="3">一般
+                        <input name="recoverConditions" type="radio" value="4">较好
+                        <input name="recoverConditions" type="radio" value="5">很好
+                    </td>
+                </tr>
+                <tr>
+                    <td>患者具体情况</td>
+                    <td><p id="patientSpecificConditions"
+                           name="patientSpecificConditions"></p></td>
+                </tr>
+                <tr>
+                    <td>康复宣传指导</td>
+                    <td><p id="reCoverPropaganda"
+                           name="reCoverPropaganda"></p></td>
+                </tr>
+                <tr>
+                    <td>被访问者建议</td>
+                    <td><p id="suggest"></p></td>
+                </tr>
+                <tr>
+                    <td>随访满意度</td>
+                    <td>
+                        <input name="satisfactionDegree" type="radio" value="1">非常差
+                        <input name="satisfactionDegree" type="radio" value="2">较差
+                        <input name="satisfactionDegree" type="radio" value="3">一般
+                        <input name="satisfactionDegree" type="radio" value="4">满意
+                        <input name="satisfactionDegree" type="radio" value="5">非常满意
+                    </td>
+                </tr>
+                <tr>
+                    <td>随访记录提交时间</td>
+                    <td><p id="followNowTime"></p></td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+            <div class="pagination pagination-centered">
+                <ul id="followUpPlanRecord_pagination">
+
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    $(document).ready(function () {
+        var userName = getCookie('userName');
+        console.log(userName);
+        $("#user-name").html(userName);
+        findFlupplanRecordList(1);
+
+    });
+    var myChart = echarts.init(document.getElementById('main_echarts'));
+    myChart.setOption({
+        title: {
+            text: '随访记录'
+        },
+        tooltip: {},
+
+        xAxis: {
+            data: ["非常差","较差","一般","较好","非常好"]
+        },
+        yAxis: {},
+        series: [
+            {
+                // 根据名字对应到相应的系列
+                name: '满意度',
+                type: "bar",
+                data: []
+            }
+
+        ]
+
+
+    });
+
+    //根据输入显示报表
+    function buildEcharts(key, flupplanId) {
+        if (flupplanId === "" || flupplanId == null)
+        {
+            alert("请先输入随访计划编号，否则不能生成报表！");
+            return false;
+        }
+        $.ajax({
+            url: "/findSatisfactionDegree",
+            data: {
+                key: key,
+                flupplanId:flupplanId
+            },
+            type: "get",
+            dataType: "json",
+            success: function (map) {
+                myChart.setOption({
+                    legend: {
+                        data: []
+                    },
+                    series: [
+                        {
+                            // 根据名字对应到相应的系列
+                            name: '',
+                            type: "bar",
+                            data: [0,0,0,0,0]
+                        }
+                    ]
+                });
+                if (key == 1){
+                    myChart.hideLoading();
+                    myChart.setOption({title: {
+                            text: '随访记录'
+                        },
+                        tooltip: {},
+                        yAxis: {},
+                        legend: {
+                            data: ["治疗效果"]
+                        },
+                        xAxis: {
+                            data: ["非常差","较差","一般","较好","非常好"]
+                        },
+                        series: [
+                            {
+                                // 根据名字对应到相应的系列
+                                name: '治疗效果',
+                                type: "bar",
+                                data: map.treatEffects
+                            }
+                        ]
+                    },true);
+                }
+                else if (key == 2){
+                    myChart.hideLoading();
+                    myChart.setOption({
+                        title: {
+                            text: '随访记录'
+                        },
+                        tooltip: {},
+
+                        xAxis: {
+                            data: ["非常差","较差","一般","较好","非常好"]
+                        },
+                        yAxis: {},
+                        legend: {
+                            data: ["恢复情况"]
+                        },
+                        series: [
+                            {
+                                // 根据名字对应到相应的系列
+                                name: '恢复情况',
+                                type: "bar",
+                                data: map.recoverConditions
+                            }
+                        ]
+                    },true);
+                }
+                else if (key == 3) {
+                    myChart.hideLoading();
+                    myChart.setOption({
+                        title: {
+                            text: '随访记录'
+                        },
+                        tooltip: {},
+
+                        xAxis: {
+                            data: ["非常差","较差","一般","较好","非常好"]
+                        },
+                        yAxis: {},
+                        legend: {
+                            data: ["满意度"]
+                        },
+                        series: [
+                            {
+                                // 根据名字对应到相应的系列
+                                name: '满意度',
+                                type: "bar",
+                                data: map.satisfactionDegrees
+                            }
+                        ]
+                    },true);
+                }
+                else {
+                    myChart.hideLoading();
+                    myChart.setOption({
+                        title: {
+                            text: '随访记录'
+                        },
+                        tooltip: {},
+
+                        xAxis: {
+                            data: ["非常差","较差","一般","较好","非常好"]
+                        },
+                        yAxis: {},
+                        legend: {
+                            data: ["治疗效果","恢复情况","满意度"]
+                        },
+                        series: [
+                            {
+                                // 根据名字对应到相应的系列
+                                name: '治疗效果',
+                                type: "bar",
+                                data: map.treatEffects
+                            },
+                            {
+                                // 根据名字对应到相应的系列
+                                name: '恢复情况',
+                                type: "bar",
+                                data: map.recoverConditions
+                            },
+                            {
+                                // 根据名字对应到相应的系列
+                                name: '满意度',
+                                type: "bar",
+                                data: map.satisfactionDegrees
+                            }
+                        ]
+                    },true);
+                }
+            }
+        })
+    }
+
+
+    //根据随访记录ID寻找随访计划的详细信息
+    function findFlupplanRecord(rapId) {
+
+        $.ajax({
+            url: "/findFollowUpPlanById",
+            type: "get",
+            data: {
+                rapId: rapId
+            },
+            success: function (flupplan) {
+                console.log(flupplan);
+                if (flupplan == null)
+                    return false;
+                $("#followUpPlanRecordModal").text(flupplan.rapId);
+                $("#flupplanId").text(flupplan.followUpId);
+                $("#doctorId").text(flupplan.doctor.userId);
+                $("#doctorName").text(flupplan.doctor.userName);
+                $("#patient").text(flupplan.patient.patientId);
+                $("#patient_name").text(flupplan.patient.patientName);
+                $('input[name=followUpMode]').eq(flupplan.followUpMode).attr("checked", 'checked');
+                $('input[name=treatEffect]').eq(flupplan.treatEffect).attr("checked", 'checked');
+                $('input[name=recoverConditions]').eq(flupplan.recoverConditions).attr("checked", 'checked');
+                $('input[name=satisfactionDegree]').eq(flupplan.satisfactionDegree).attr("checked", 'checked');
+                $("#patientSpecificConditions").text(flupplan.patientSpecificConditions);
+                $("#reCoverPropaganda").text(flupplan.reCoverPropaganda);
+                $("#suggest").text(flupplan.suggest);
+                $("#followNowTime").text(timestampToDate(flupplan.followNowTime));
+
+
+            },
+            error: function () {
+
+            }
+        });
+
+    }
+
+    //根据输入搜索随访记录信息
+    function findFlupRecord(key, value, pageNum) {
+        $.ajax({
+            type: "get",
+            url: "/findAppointedFlupplanRecord",
+            data: {
+                key: key,
+                value: value,
+                pageNum: pageNum,
+                pageSize: 5
+            },
+            dataType: "json",
+            success: function (map) {
+                console.log(map.followUpPlans);
+                $("#flupplan_record_list").html("");
+                $("#flupplan_record_list_pagination").html("");
+                var tbody = "";
+
+                $.each(map.followUpPlans.list, function (i, flupplan) {
+
+                    tbody += '<tr id=' + '"' + flupplan.rapId + '"' + '><td>' + flupplan.followUpId + '</td><td>' + flupplan.rapId
+                        + '</td><td>' + flupplan.doctor.userId + '/' + flupplan.doctor.userName + '</td><td>' + flupplan.patient.patientId + '/' + flupplan.patient.patientName
+                        + '</td><td><a href="#followUpPlanRecord_info" role="button" class=" btn btn-primary" data-toggle="modal"' +
+                        'onclick="findFlupplanRecord(' + "'" + flupplan.rapId + "'" + ')">详细信息</a></td></tr>';
+                });
+
+                var page = map.followUpPlans;
+                var pageBody = pagination(page, "flupplanRecords");
+                $("#flupplan_record_list_pagination").append(pageBody);
+                $("#flupplan_record_list").append(tbody);
+
+            },
+            error: function () {
+                alert("找不到该随访记录，请检查输入是否正确");
+                return false;
+            }
+        })
+    }
+
+    //设置随访计划列表
+    function findFlupplanRecordList(pageNum) {
+        $("#value").val("");
+        $.ajax({
+            type: "get",
+            url: "/findAllFollowUpPlan",
+            data: {
+                pageNum: pageNum,
+                pageSize: 10
+            },
+            dataType: "json",
+            success: function (map) {
+                console.log(map.followUpPlans);
+                $("#flupplan_record_list").html("");
+                $("#flupplan_record_list_pagination").html("");
+                var tbody = "";
+
+                $.each(map.followUpPlans.list, function (i, flupplan) {
+
+                    tbody += '<tr id=' + '"' + flupplan.rapId + '"' + '><td>' + flupplan.followUpId + '</td><td>' + flupplan.rapId
+                        + '</td><td>' + flupplan.doctor.userId + '/' + flupplan.doctor.userName + '</td><td>' + flupplan.patient.patientId + '/' + flupplan.patient.patientName
+                        + '</td><td><a href="#followUpPlanRecord_info" role="button" class=" btn btn-primary" data-toggle="modal"' +
+                        'onclick="findFlupplanRecord(' + "'" + flupplan.rapId + "'" + ')">详细信息</a></td></tr>';
+                });
+
+                var page = map.followUpPlans;
+                var pageBody = pagination(page, "flupplanRecords");
+                $("#flupplan_record_list_pagination").append(pageBody);
+                $("#flupplan_record_list").append(tbody);
+
+            },
+            error: function () {
+                alert("找不到该随访记录，请检查输入是否正确");
+                return false;
+            }
+        })
+    }
+
+
+    //自定义分页插件
+    function pagination(page, name) {
+        var pageBody = "";
+        pageBody += '<li><a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',1,' + ')" >首页</a></li>';
+        if (page.pageNum != 1)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pageNum - 1) + ')">上一页</a></li>';
+        //假如总页数只有1页时，不设置分页
+        //当总页数少于7时，显示所有的页数，否则动态变换
+        var al = '';
+        if (page.pages < 7) {
+            for (var i = 1; i <= page.pages; i++) {
+                if (i == page.pageNum)
+                    pageBody += '<li class="active"><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                else
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+            }
+        } else {
+            if (page.pageNum - 3 < 1) {
+                for (var i = 1; i < page.pageNum; i++) {
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+            } else {
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+                for (var i = page.pageNum - 3; i < page.pageNum; i++) {
+                    pageBody += '<li> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+            }
+            //高亮当前页面
+            pageBody += '<li class="active"> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+
+            if (page.pageNum + 4 > page.pages) {
+                for (var i = page.pageNum + 1; i <= page.pages; i++) {
+                    pageBody += '<li> <a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+            } else {
+                for (var i = page.pageNum + 1; i < page.pageNum + 4; i++) {
+                    pageBody += '<li><a  href="javascript:;"  onclick="clickpage(' + "'" + name + "'" + ',' + i + ')">' + i + '</a></li>';
+                }
+                pageBody += '<li> <a  href="javascript:;" >...</a></li>';
+            }
+
+        }
+
+        if (page.pageNum != page.pages)
+            pageBody += '<li> <a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pageNum + 1) + ')">下一页</a></li>';
+        pageBody += '<li><a href="javascript:;" onclick="clickpage(' + "'" + name + "'" + ',' + (page.pages) + ')">尾页</a></li>';
+        pageBody += '<li><input type="text"  style="width: 40px; " id="pageNumberGo" oninput = "value=value.replace(/[^\\d]/g,' + "'" + "'" + ')">页</li>';
+        pageBody += '<li><a href="javascript:;" onclick="pagejumping(' + "'" + name + "'," + page.pages + ')">跳转</a></li>';
+        pageBody += '<li>&nbsp;&nbsp;&nbsp;&nbsp;共' + page.pageNum + '/' + page.pages + '页&nbsp;&nbsp;&nbsp;&nbsp;</li>';
+
+        return pageBody;
+    }
+
+    //根据条件点击页码跳转
+    function clickpage(name, number) {
+        //console.log("clickpage():"+name+" "+number);
+        if (name === "flupplanRecords")
+            findFlupplanRecordList(number);
+
+    }
+
+    //根据输入的页数跳转
+    function pagejumping(name, maxPages) {
+        var number = $("#pageNumberGo").val();
+        if (number == null || number == "") {
+            alert("请输入跳转页数");
+            return false;
+        } else if (number > maxPages) {
+            alert("当前输入的页码已超过最大页码");
+            return false;
+        }
+        clickpage(name, number);
+    }
+
+    //判断开始时间是否少于结束时间
+    function checkDateTime(dateStartTime, dateEndTime) {
+        if (dateStartTime === "" || dateStartTime == null)
+            return false;
+        if (dateEndTime === "" || dateEndTime == null)
+            return false;
+
+
+        var startTime = dateStartTime;
+        var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+        var endTime = dateEndTime;
+        var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+        if (end < start) {
+            alert("开始时间不能小于结束时间");
+            return false;
+        } else
+            return true;
+    }
+
+    //更新随访计划
+    function updateFlupplan(form) {
+        $.ajax({
+            url: "/updateFlupplan",
+            data: form.serialize(),
+            type: "post",
+            success: function (result) {
+                if (result === true) {
+                    alert("修改成功");
+                    $("#flupplan_info").modal("hide");
+                } else {
+                    alert("修改失败");
+                    return;
+                }
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+    //删除随访计划
+    function deleteFollowUpPlan(tr) {
+
+        $.ajax({
+            url: "/deleteFlupplan",
+            data: {followUpId: tr},
+            type: "post",
+            success: function (data) {
+                if (data === true) {
+                    alert("删除成功");
+                    $("#" + tr).remove();
+                } else
+                    alert("删除失败");
+            }
+        })
+    }
+</script>
+</html>

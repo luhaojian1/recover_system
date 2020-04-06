@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../css/bootstrap-combined.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/layoutit.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="../js/echarts.js"></script>
+    <script src="../js/jquery-2.0.0.min.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script src="../js/jquery.htmlClean.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+
+            <div id="content" class="row-fluid">
+
+
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span12">
+
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="row-fluid">
+
+                                        <div class="span1"></div>
+                                        <div class="span9">
+                                            <h3>随访记录列表</h3>
+
+                                            <div>
+                                                <br>
+                                                <table class="table table-condensed">
+
+                                                    <tbody id="flupplan_record_list">
+                                                    <tr>
+                                                        <td>科室</td>
+                                                        <td><select id="higherOffice"
+                                                                onchange="sickOfficeChange(this,document.getElementById('sickOffice'));"
+                                                                style=" width:120px; height:30px;line-height:30px; ">
+                                                            <option value="null">请选择科室</option>
+                                                            <option value="JZ">
+                                                                急诊科
+                                                            </option>
+                                                            <option value="JSXL">
+                                                                精神心理科
+                                                            </option>
+                                                            <option value="NK">
+                                                                内科
+                                                            <option value="WK">
+                                                                外科
+                                                            </option>
+                                                            <option value="FC">
+                                                                妇产科
+                                                            </option>
+                                                            <option value="MAN">
+                                                                男科
+                                                            </option>
+                                                            <option value="CD">
+                                                                儿科
+                                                            </option>
+                                                            <option value="WG">
+                                                                五官科
+                                                            </option>
+                                                            <option value="ZL">
+                                                                肿瘤科
+                                                            </option>
+                                                            <option value="PFXB">
+                                                                皮肤性病科
+                                                            </option>
+                                                            <option value="ZY">
+                                                                中医科
+                                                            </option>
+
+
+                                                        </select>
+                                                            <select name="office" id="sickOffice"
+                                                                    style=" width:120px; height:30px;line-height:30px; " onclick="">
+                                                                <option value="null">请选择</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>挂号类别</td>
+                                                        <td><select id="registrationCategory" style="width:150px;"
+                                                                    name="registrationCategory"
+                                                                    onchange="transformRegistrationCategory($('#sickOffice').val(),this.value,'userId')">
+                                                            <option value="null">请选择</option>
+                                                            <option value="3">普通门诊</option>
+                                                            <option value="2">专业门诊</option>
+                                                            <option value="1">专家门诊</option>
+                                                        </select></td>
+                                                        <td>医生</td>
+                                                        <td><select id="userId" style="width:150px" name="userId">
+
+                                                        </select></td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td>挂号费</td>
+                                                        <td><input style="width:50px" id="diagnosisPrice" type="number"
+                                                                   name="diagnosisPrice" readonly="readonly" value="">元&nbsp;&nbsp;
+                                                        </td>
+                                                        <td>就诊状态</td>
+                                                        <td><select style="width:100px" name="visStatus">
+                                                            <option value="1">待诊</option>
+                                                            <option value="2">过号</option>
+                                                            <option value="3">已就诊</option>
+                                                            <option value="4">退号</option>
+                                                        </select></td>
+
+                                                        <td>剩余号数</td><td><input type="number" id="restDiagnosisCount"  readonly="readonly"></td>
+
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <div class="pagination pagination-centered">
+                                                    <ul id="flupplan_record_list_pagination">
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="span2">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="main" style="width: 600px;height:400px;">
+    <h3>hello</h3>
+
+</div>
+</body>
+<script type="text/javascript">
+
+    var sickOffice = new Object();
+    sickOffice['JZ'] = ['急诊科'];
+    sickOffice['JSXL'] = ['精神科', '心里咨询科'];
+    sickOffice['NK'] = ['消化内科', '呼吸内科', '神经内科', '心血管内科', '肾内科', '血液内科', '免疫科', '内分泌科'];
+    sickOffice['WK'] = ['普通外科', '神经外科', '心胸外科', '泌尿外科', '心血管外科', '乳腺外科', '肝胆外科', '肛肠外科', '烧伤科', '骨外科'];
+    sickOffice['FC'] = ['妇科', '产科'];
+    sickOffice['MAN'] = ['男科'];
+    sickOffice['CD'] = ['儿科综合', '小儿内科', '小儿外科', '新生儿科', '儿童营养保健科'];
+    sickOffice['WG'] = ['耳鼻喉科', '眼科', '口腔科'];
+    sickOffice['ZL'] = ['肿瘤内科', '肿瘤外科', '肿瘤综合科', '肿瘤康复科'];
+    sickOffice['PFXB'] = ['皮肤病科', '性病科'];
+    sickOffice['ZY'] = ['中医全科', '中医内科', '中医外科', '中医儿科', '针灸按摩科'];
+
+
+    //改变科室
+    function sickOfficeChange(office, sOffice) {
+        console.log(office.value+ " " +sOffice);
+        var o, so;
+        var i, ii;
+        o = office.value;
+        so = sOffice.value;
+        sOffice.length = 1;
+        if (o == '0') return;
+        if (typeof (sickOffice[o]) == 'undefined') return;
+
+        console.log(sickOffice[o].length);
+        for (i = 0; i < sickOffice[o].length; i++) {
+            ii = i + 1;
+
+            sOffice.options[ii] = new Option();
+            sOffice.options[ii].text = sickOffice[o][i];
+            sOffice.options[ii].value = o+""+ii;
+        }
+        sOffice.options[0].text = "请选择";
+
+    }
+
+    //根据科室和挂号类别来查找医生
+    function transformRegistrationCategory(office, registrationCategory, id) {
+        console.log(office + " " + registrationCategory + " " + id);
+        $("#" + id).empty();
+        var change = registrationCategory;//挂号类型
+        var category = office; //科室
+        changediagnosisPrice(registrationCategory);
+        $.ajax({
+            type: "get",
+            url: "/findDoctor",
+            data: {
+                "office": category,
+                "jobPosition": change
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data != null) {
+                    var option = '<option value="">请选择</option>';
+                    $.each(data.list, function (i, mdeicalpersonal) {
+                        option += '<option value="' + mdeicalpersonal.userId + '">' + mdeicalpersonal.userName + '</option>';
+                    });
+                    $("#" + id).append(option);
+                }
+            },
+            error: function () {
+                return;
+            }
+
+        })
+    }
+    //根据挂号类别修改价钱
+    function changediagnosisPrice(registrationCategory) {
+        var change = registrationCategory;
+        //alert(category+" "+change)
+        if (change == "0") {
+            $("#diagnosisPrice").val("");
+        }
+        else {
+
+            if (change == "1") {
+                $("#diagnosisPrice").val(10);
+            }
+            else if (change == "2") {
+                $("#diagnosisPrice").val(7);
+            }
+            else if (change == "3") {
+                $("#diagnosisPrice").val(2);
+            }
+        }
+
+
+    }
+</script>
+</html>

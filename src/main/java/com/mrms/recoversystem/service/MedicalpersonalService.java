@@ -4,7 +4,6 @@ import com.mrms.recoversystem.model.Medicalpersonal;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 public interface MedicalpersonalService {
     boolean add(Medicalpersonal medicalpersonal);

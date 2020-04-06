@@ -1,4 +1,4 @@
-package com.mrms.recoversystem.service;
+package com.mrms.recoversystem.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.mrms.recoversystem.mapper.MedicalpersonalMapper;

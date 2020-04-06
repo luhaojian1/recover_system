@@ -9,6 +9,8 @@ public interface PatientService {
     public Patient searchPatient(Patient patient);
     public boolean updatePatient(Patient patient);
     public boolean deletePatient(int patientId);
-    public List<Patient> findAllPatient(int pageNum,int pageSize);
-    public List<Patient> findAppointedPatient(int pageNum,int pageSize ,Patient patient);
+
+    public List<Patient> findAllPatient(int pageNum, int pageSize);
+
+    public List<Patient> findAppointedPatient(int pageNum, int pageSize, Patient patient);
 }

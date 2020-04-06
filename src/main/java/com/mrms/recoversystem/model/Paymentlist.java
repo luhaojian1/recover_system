@@ -2,7 +2,6 @@ package com.mrms.recoversystem.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class Paymentlist implements Serializable {
     private String treatSheetId;

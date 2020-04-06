@@ -67,7 +67,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> findAppointedPatient(int pageNum,int pageSize,Patient patient) {
+    public List<Patient> findAppointedPatient(int pageNum, int pageSize, Patient patient) {
         PageHelper.startPage(pageNum,pageSize);
         List<Patient> result = null;
         try{
@@ -81,7 +81,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> findAllPatient(int pageNum,int pageSize){
+    public List<Patient> findAllPatient(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         List<Patient> result = null;
         try{

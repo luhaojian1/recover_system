@@ -5,7 +5,10 @@ import com.mrms.recoversystem.model.Patient;
 import com.mrms.recoversystem.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -104,7 +107,7 @@ public class PatientController {
 
     @GetMapping(value = "findAppointedPatient/{pageNum}/{pageSize}")
     @ResponseBody
-    public Map<String, PageInfo<Patient>> findAppointedPatient(@PathVariable("pageNum") int pageNum,@PathVariable("pageSize") int pageSize,Patient patient) {
+    public Map<String, PageInfo<Patient>> findAppointedPatient(@PathVariable("pageNum") int pageNum, @PathVariable("pageSize") int pageSize, Patient patient) {
         if (patient != null) {
             System.out.println("-------------patient不为空----------------");
             System.out.println(patient.toString());

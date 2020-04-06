@@ -11,7 +11,8 @@ public interface RegisterService {
     public Register findRegisterByRegisterId(String registerId);
     public boolean update(Register register);
     public boolean delete(String registerId);
-    public List<Register> findRegisterList(Integer tollCollector, int pageNum , int pageSize);
+
+    public List<Register> findRegisterList(int pageNum, int pageSize);
     public List<Register> findRegistersByDoctorId(Integer doctorId, Integer visStatus);
 
     public int getRegisterCountWithDoctor(int doctorId, Date startDate, Date endDate);

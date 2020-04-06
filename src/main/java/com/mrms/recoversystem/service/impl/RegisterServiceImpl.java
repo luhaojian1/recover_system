@@ -1,4 +1,4 @@
-package com.mrms.recoversystem.service;
+package com.mrms.recoversystem.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.mrms.recoversystem.mapper.RegisterMapper;
@@ -107,12 +107,12 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public List<Register> findRegisterList(Integer tollCollector, int pageNum , int pageSize) {
-        System.out.println("tollCollector="+tollCollector);
+    public List<Register> findRegisterList(int pageNum, int pageSize) {
+
         PageHelper.startPage(pageNum,pageSize);
         List<Register> result;
         try{
-            result = registerMapper.findRegistersTollCollector(tollCollector);
+            result = registerMapper.findRegistersTollCollector();
         }catch (Exception e){
             e.printStackTrace();
             return null;
